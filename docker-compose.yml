@@ -1,8 +1,9 @@
-version: '3.9'
+version: "3.9"
 
 services:
   nextjs:
     build: ./nextjs-docker
+    image: monvelooo/true_crime:latest
     restart: always
     ports:
       - 3000:3000
@@ -10,7 +11,8 @@ services:
     image: postgres
     restart: always
     # set shared memory limit when using docker-compose
-    shm_size: 128mb
+    shm_size:
+      128mb
       # or set shared memory limit when deploy via swarm stack
       #volumes:
       #  - type: tmpfs^
@@ -45,7 +47,8 @@ services:
       - "3001:3000"
 
   prometheus:
-    image: prom/prometheus
+    image:
+      prom/prometheus
       # volumes:
     # - ./etc/prometheus.yml:/etc/prometheus/prometheus.yml
     restart: always

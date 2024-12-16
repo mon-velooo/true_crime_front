@@ -30,5 +30,9 @@ jobs:
       - name: Build Docker Compose Images
         run: docker-compose -f docker-compose.yml build
 
+      - name: Tag Docker Images
+        run: |
+          docker tag monvelooo/true_crime:latest ${{ secrets.DOCKER_USERNAME }}/true_crime:latest
+
       - name: Push Docker Compose Images
         run: docker-compose -f docker-compose.yml push
