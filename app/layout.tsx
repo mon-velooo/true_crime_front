@@ -1,7 +1,10 @@
 import { Inter } from 'next/font/google';
-import Head from 'next/head';
+import { cookies } from 'next/headers';
 
+import { AppSidebar } from '@/components/ui/AppSidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import type { Metadata } from 'next';
+
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -10,15 +13,23 @@ export const metadata: Metadata = {
   title: 'True crime'
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true';
+
   return (
     <html lang="en">
-      <Head>
-        <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
-      </Head>
       <body className={inter.className}>
-        <main>{children}</main>
+        <SidebarProvider defaultOpen={defaultOpen}>
+          <AppSidebar />
+          <main>
+            <SidebarTrigger />
+            {children}
+          </main>
+        </SidebarProvider>
       </body>
     </html>
   );
 }
+
+export default RootLayout;
