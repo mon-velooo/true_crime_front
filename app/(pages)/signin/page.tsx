@@ -1,64 +1,114 @@
 'use client';
-import { signIn } from '@/services/auth/signin';
+import { useEffect, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useToast } from "@/hooks/use-toast"
+import image from '@/assets/images/illustration.avif';
+import AuthForm from '@/components/form/authForm/AuthForm';
+import { useMutation } from '@tanstack/react-query';
+import { signIn } from '@/services/auth/signin';
+
+type FormErrors = Record<string, { message?: string }>;
+
+type FormValues = {
+  email: string;
+  password: string;
+};
+
+const formSchema = z.object({
+  email: z.string().email({
+    message: 'Email must be a valid email address.',
+  }),
+  password: z.string().min(8, {
+    message: 'Password must be at least 8 characters.',
+  }),
+});
 
 export default function SignIn() {
-  // Form validation schema
-  const formSchema = z.object({
-    email: z.string().email({
-      message: 'Email must be a valid email address.'
-    }),
-    password: z.string().min(8, {
-      message: 'Password must be at least 8 characters.'
-    })
+  const { toast } = useToast();
+  // const router = useRouter();
+  // const { isAuthenticated, role, signIn: authSignIn } = useAuth();
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
-  type FormValues = z.infer<typeof formSchema>;
+  // useEffect(() => {
+  //   if (!isAuthenticated) return;
 
-  // React Hook Form with Zod resolver
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<FormValues>({
-    resolver: zodResolver(formSchema)
-  });
+  //   if (role === 'user') return router.push('/profile');
 
-  // React Query mutation
+  //   router.push('/admin');
+  // }, [isAuthenticated, role, router]);
+
   const mutation = useMutation({
     mutationFn: signIn,
     onSuccess: (data) => {
-      // Handle successful login here
-      console.log('Login successful:', data);
+      // authSignIn(data.username, data.email, data.role, data.token, data.id);
+      toast({
+        title: 'Sign in successful',
+        description: `Welcome back, ${data.email}!`,
+      });
     },
     onError: (error) => {
-      // Handle login error here
-      console.error('Login failed:', error);
-    }
+      toast({
+        variant: 'destructive',
+        title: 'Sign in failed',
+        description: `Error: ${error instanceof Error ? error.message : error}`,
+      });
+    },
   });
 
-  const onSubmit = (data: FormValues) => {
-    mutation.mutate(data);
+  const onError = useCallback(
+    (errors: FormErrors) => {
+      Object.values(errors).forEach((error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Form submission failed',
+          description: error.message,
+        });
+      });
+    },
+    [toast]
+  );
+
+  const onSubmit = (values: FormValues) => {
+    mutation.mutate(values);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <input type="email" {...register('email')} placeholder="Email" className="w-full p-2 border rounded" />
-        {errors.email && <span className="text-red-500">{errors.email.message}</span>}
-      </div>
-
-      <div>
-        <input type="password" {...register('password')} placeholder="Password" className="w-full p-2 border rounded" />
-        {errors.password && <span className="text-red-500">{errors.password.message}</span>}
-      </div>
-
-      <button type="submit" disabled={mutation.isPending} className="w-full p-2 bg-blue-500 text-white rounded">
-        {mutation.isPending ? 'Signing in...' : 'Sign In'}
-      </button>
-    </form>
+    <AuthForm<FormValues>
+      title="Sign In"
+      description="Enter your email and password to sign in"
+      fields={[
+        {
+          label: 'Email',
+          type: 'email',
+          id: 'email',
+          placeholder: 'johndoe@gmail.com',
+          name: 'email',
+        },
+        {
+          label: 'Password',
+          type: 'password',
+          id: 'password',
+          placeholder: '',
+          name: 'password',
+        },
+      ]}
+      form={form}
+      onSubmit={onSubmit}
+      onError={onError}
+      isLoading={mutation.isLoading}
+      image={"image"}
+      buttonText="Sign In"
+      redirectText="Don't have an account? "
+      redirectButton="Sign up"
+      redirectLink="/signup"
+    />
   );
 }
