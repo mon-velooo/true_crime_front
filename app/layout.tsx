@@ -3,7 +3,6 @@ import { cookies } from 'next/headers';
 
 import { AppSidebar } from '@/components/ui/AppSidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-
 import QueryProvider from '@/providers/QueryProvider';
 import type { Metadata } from 'next';
 
@@ -22,18 +21,15 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SidebarProvider defaultOpen={defaultOpen}>
-          <AppSidebar />
-          <main>
-            <SidebarTrigger />
-            {children}
-          </main>
-        </SidebarProvider>
-
         <QueryProvider>
-          <main>{children}</main>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <AppSidebar />
+            <main>
+              <SidebarTrigger />
+              {children}
+            </main>
+          </SidebarProvider>
         </QueryProvider>
-
       </body>
     </html>
   );
