@@ -3,6 +3,7 @@ import { CustomBarChart } from '@/components/charts/CustomBarChart';
 import { CustomKPIChart } from '@/components/charts/CustomKPIChart';
 import { CustomLineChart } from '@/components/charts/CustomLineChart';
 import { CustomPieChart } from '@/components/charts/CustomPieChart';
+import { CustomVerticalBarChart } from '@/components/charts/CustomVerticalBarChart';
 import { Container } from '@/components/layout/Container/Container';
 import Grid from '@/components/layout/Grid/Grid';
 import { Card } from '@/components/ui/card';
@@ -56,10 +57,11 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <DateRangePicker />
-      </div>
       <Container>
+        <div className="flex justify-between items-center pb-4">
+          <h1 className="text-2xl font-semibold">Dashboard</h1>
+          <DateRangePicker />
+        </div>
         <Grid
           cols={{
             mobile: 2,
@@ -76,6 +78,8 @@ export default function Home() {
             config={config}
             footerText="Showing total visitors for the last 6 months"
           />
+
+          <CustomVerticalBarChart title="Most dangerous neighborhoods" data={districts} config={config} />
 
           <CustomBarChart title="Most dangerous neighborhoods" data={districts} config={config} />
 
