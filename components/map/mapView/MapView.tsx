@@ -1,10 +1,10 @@
 'use client';
-import { useState, useRef, useCallback, Suspense } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 import { config } from '@/lib/config';
 import { fetchCrimes } from '@/services/crimes/fetchCrimes';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import mapboxgl from 'mapbox-gl';
 import Map, { FullscreenControl, Marker, GeolocateControl } from 'react-map-gl';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
@@ -24,6 +24,19 @@ const Pin = ({ size = 20, color = '#313131', active }) => {
   );
 };
 
+const MapMaker = ({ crimes }) => {
+  if (!crimes) return null;
+  return (
+    <>
+      {crimes.crimes.map((crime) => (
+        <Marker key={crime.id} longitude={crime.longitude} latitude={crime.latitude} anchor="bottom">
+          <Pin active={true} />
+        </Marker>
+      ))}
+    </>
+  );
+};
+
 const MapContent = () => {
   const defaultLong = -74.006;
   const defaultLat = 40.7128;
@@ -34,9 +47,27 @@ const MapContent = () => {
     zoom: 12
   });
 
-  const { data: crimes } = useSuspenseQuery({
-    queryKey: ['crimes'],
-    queryFn: fetchCrimes
+  const [debouncedViewport, setDebouncedViewport] = useState(viewport);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedViewport(viewport);
+    }, 1000); // 1 second debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [viewport]);
+
+  const { data: crimes } = useQuery({
+    queryKey: ['crimes', debouncedViewport.longitude, debouncedViewport.latitude],
+    queryFn: () =>
+      fetchCrimes({
+        longitude: debouncedViewport.longitude,
+        lattitude: debouncedViewport.latitude,
+        zoom: debouncedViewport.zoom,
+        startDate: '2024-03-08'
+      })
   });
 
   // NYC Bounds for geocoder restriction
@@ -70,11 +101,7 @@ const MapContent = () => {
       <FullscreenControl position="top-left" />
       <GeolocateControl position="top-left" fitBoundsOptions={{ maxZoom: 15 }} trackUserLocation={true} />
 
-      {crimes.crimes.slice(0, 20).map((crime) => (
-        <Marker key={crime.id} longitude={crime.longitude} latitude={crime.latitude} anchor="bottom">
-          <Pin active={true} />
-        </Marker>
-      ))}
+      <MapMaker crimes={crimes} />
     </Map>
   );
 };
@@ -82,13 +109,7 @@ const MapContent = () => {
 export default function MapView({ className }: { className: string }) {
   return (
     <div className={className}>
-      Content in the component
-      <Suspense
-        fallback={<div className="flex items-center justify-center h-full bg-gray-800 text-white">Loading...</div>}
-      >
-        <MapContent />
-      </Suspense>
-      Rest of the component
+      <MapContent />
     </div>
   );
 }

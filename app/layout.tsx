@@ -23,16 +23,16 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-      <QueryProvider>
-        <SidebarProvider defaultOpen={defaultOpen}>
-          <AppSidebar />
-          <SidebarInset>
-            <Header />
-            <QueryProvider>
-              <main className="w-full p-4">{children}</main>
-            </QueryProvider>
-          </SidebarInset>
-        </SidebarProvider>
+        <QueryProvider>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <AppSidebar />
+            <SidebarInset>
+              <Header />
+              <QueryProvider>
+                <main className="w-full p-4">{children}</main>
+              </QueryProvider>
+            </SidebarInset>
+          </SidebarProvider>
         </QueryProvider>
       </body>
     </html>
