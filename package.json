@@ -12,6 +12,7 @@
     "@suspensive/react-query": "^2.18.10",
     "@tanstack/react-query": "^5.62.8",
     "class-variance-authority": "^0.7.1",
+    "@hookform/resolvers": "^3.3.4",
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
     "mapbox-gl": "^3.8.0",
@@ -20,7 +21,9 @@
     "react-dom": "^18.2.0",
     "react-map-gl": "^7.1.7",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "react-hook-form": "^7.51.3",
+    "zod": "^3.22.5"
   },
   "devDependencies": {
     "@types/mapbox-gl": "^3.4.1",
