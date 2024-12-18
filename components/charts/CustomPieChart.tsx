@@ -1,13 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 import { Label, Pie, PieChart } from 'recharts';
-
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface CustomPieChartProps {
   title: string;
@@ -23,24 +19,6 @@ interface CustomPieChartProps {
 
 export function CustomPieChart({ title, description, data, config, trend, footerText }: CustomPieChartProps) {
   const totalValue = data.reduce((acc, { value }) => acc + value, 0);
-  const [periodText, setPeriodText] = useState('in the last day');
-
-  const handlePeriodChange = (value: string) => {
-    switch (value) {
-      case 'day':
-        setPeriodText('in the last day');
-        break;
-      case 'month':
-        setPeriodText('in the last month');
-        break;
-      case 'year':
-        setPeriodText('in the last year');
-        break;
-      default:
-        setPeriodText('though the period');
-        break;
-    }
-  };
 
   return (
     <Card className="flex flex-col">
@@ -48,22 +26,8 @@ export function CustomPieChart({ title, description, data, config, trend, footer
         <div className="flex justify-between w-full gap-2">
           <div>
             <CardTitle>{title}</CardTitle>
-            <CardDescription>{periodText ? periodText : description}</CardDescription>
+            <CardDescription>{description}</CardDescription>
           </div>
-          <Select onValueChange={handlePeriodChange} defaultValue="day">
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Durée" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="day" defaultChecked>
-                  Last day
-                </SelectItem>
-                <SelectItem value="month">Last month</SelectItem>
-                <SelectItem value="year">Last year</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
         </div>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
