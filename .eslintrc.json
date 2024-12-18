@@ -29,37 +29,12 @@
     "node": true,
     "es6": true
   },
-  "plugins": ["react", "prettier", "import"],
+  "plugins": ["react", "prettier"],
   "rules": {
     "react/prop-types": "off",
     "prettier/prettier": "error",
     "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
-    "react/react-in-jsx-scope": "off",
-    // "no-console": ["error", { "allow": ["warn", "error"] }],
-    "import/order": [
-      "error",
-      {
-        "groups": [["builtin", "external", "internal"], "parent", "sibling", "index"],
-        "newlines-between": "always",
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        },
-        "pathGroups": [
-          {
-            "pattern": "react",
-            "group": "builtin",
-            "position": "before"
-          },
-          {
-            "pattern": "next/**",
-            "group": "builtin",
-            "position": "before"
-          }
-        ],
-        "pathGroupsExcludedImportTypes": ["react"]
-      }
-    ]
+    "react/react-in-jsx-scope": "off"
   },
   "ignorePatterns": ["tailwind.config.ts"]
 }
