@@ -9,14 +9,6 @@ import Grid from "@/components/layout/Grid/Grid";
 import { Card } from "@/components/ui/card";
 import { ChartConfig } from "@/components/ui/chart";
 import { DateRangePicker } from "@/components/ui/DateRangePicker";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { fetchDistricts } from "@/services/districts/fetchDistricts";
 import { useQuery } from "@tanstack/react-query";
 
@@ -128,20 +120,6 @@ export default function Home() {
             <Card>
               <div className="flex align-middle justify-between p-4">
                 <h2 className="text-lg font-semibold">Daily KPIs</h2>
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Durée" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="day" defaultChecked>
-                        Last day
-                      </SelectItem>
-                      <SelectItem value="month">Last month</SelectItem>
-                      <SelectItem value="year">Last year</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
               </div>
             </Card>
             <div className="grid grid-cols-2 gap-2">
