@@ -3,6 +3,10 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/
 interface CustomKPIChartProps {
   title: string;
   description: string;
+  trend?: {
+    value: number;
+    isUp: boolean;
+  };
   footerText?: string;
 }
 

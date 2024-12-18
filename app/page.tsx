@@ -5,9 +5,12 @@ import { CustomLineChart } from '@/components/charts/CustomLineChart';
 import { CustomPieChart } from '@/components/charts/CustomPieChart';
 import { Container } from '@/components/layout/Container/Container';
 import Grid from '@/components/layout/Grid/Grid';
-import MapView from '@/components/MapView/MapView';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { ChartConfig } from '@/components/ui/chart';
+import { DateRangePicker } from '@/components/ui/DateRangePicker';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { fetchDistricts } from '@/services/districts/fetchDistricts';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Home() {
   const pieData = [
@@ -46,25 +49,25 @@ export default function Home() {
     }
   } satisfies ChartConfig;
 
+  const { data: districts } = useQuery({
+    queryKey: ['districts'],
+    queryFn: fetchDistricts
+  });
+
   return (
     <>
+      <div className="flex justify-between items-center">
+        <DateRangePicker />
+      </div>
       <Container>
-        <Card>
-          <CardHeader>
-            <CardTitle>Map</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <MapView />
-          </CardContent>
-        </Card>
         <Grid
           cols={{
-            mobile: 1,
+            mobile: 2,
             tablet: 2,
-            desktop: 4
+            desktop: 2
           }}
           gap={2}
-          className="w-full"
+          className="pb-4"
         >
           <CustomLineChart
             title="Line Chart"
@@ -74,16 +77,10 @@ export default function Home() {
             footerText="Showing total visitors for the last 6 months"
           />
 
-          <CustomBarChart
-            title="Bar Chart"
-            description="January - June 2025"
-            data={data}
-            config={config}
-            footerText="Showing total visitors for the last 6 months"
-          />
+          <CustomBarChart title="Most dangerous neighborhoods" data={districts} config={config} />
 
           <CustomPieChart
-            title="Browser Usage"
+            title="Répartition des types de crimes"
             description="January - June 2024"
             data={pieData}
             config={pieConfig}
@@ -92,16 +89,35 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-3 sm:grid-cols-1 gap-2">
+            <Card>
+              <div className="flex align-middle justify-between p-4">
+                <h2 className="text-lg font-semibold">Daily KPIs</h2>
+                <Select>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Durée" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="day" defaultChecked>
+                        Last day
+                      </SelectItem>
+                      <SelectItem value="month">Last month</SelectItem>
+                      <SelectItem value="year">Last year</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </Card>
             <div className="grid grid-cols-2 gap-2">
               <CustomKPIChart title="Nombre de criminels" description="300K" />
+              <CustomKPIChart title="Nombre d'infractions" description="300K" />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <CustomKPIChart title="Nombre de victimes" description="300K" />
               <CustomKPIChart title="Nombre de criminels" description="300K" />
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
+              <CustomKPIChart title="Nombre d'infractions" description="300K" />
               <CustomKPIChart title="Nombre de criminels" description="300K" />
             </div>
           </div>
