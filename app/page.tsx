@@ -5,6 +5,8 @@ import { CustomLineChart } from '@/components/charts/CustomLineChart';
 import { CustomPieChart } from '@/components/charts/CustomPieChart';
 import { Container } from '@/components/layout/Container/Container';
 import Grid from '@/components/layout/Grid/Grid';
+import MapView from '@/components/MapView/MapView';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig } from '@/components/ui/chart';
 
 export default function Home() {
@@ -47,21 +49,22 @@ export default function Home() {
   return (
     <>
       <Container>
-        {/* <Card>
+        <Card>
           <CardHeader>
             <CardTitle>Map</CardTitle>
           </CardHeader>
           <CardContent>
             <MapView />
           </CardContent>
-        </Card> */}
+        </Card>
         <Grid
           cols={{
             mobile: 1,
             tablet: 2,
-            desktop: 2
+            desktop: 4
           }}
           gap={2}
+          className="w-full"
         >
           <CustomLineChart
             title="Line Chart"
@@ -88,7 +91,20 @@ export default function Home() {
             footerText="Showing total visitors for the last 6 months"
           />
 
-          <CustomKPIChart title="Titre" description="description" footerText="footer" />
+          <div className="grid grid-cols-3 sm:grid-cols-1 gap-2">
+            <div className="grid grid-cols-2 gap-2">
+              <CustomKPIChart title="Nombre de criminels" description="300K" />
+              <CustomKPIChart title="Nombre de criminels" description="300K" />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <CustomKPIChart title="Nombre de criminels" description="300K" />
+              <CustomKPIChart title="Nombre de criminels" description="300K" />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <CustomKPIChart title="Nombre de criminels" description="300K" />
+              <CustomKPIChart title="Nombre de criminels" description="300K" />
+            </div>
+          </div>
         </Grid>
       </Container>
     </>
