@@ -1,8 +1,10 @@
 import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 
+import { Header } from '@/components/layout/Header/Header';
 import { AppSidebar } from '@/components/ui/AppSidebar';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+
 import QueryProvider from '@/providers/QueryProvider';
 import type { Metadata } from 'next';
 
@@ -21,14 +23,16 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QueryProvider>
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <AppSidebar />
-            <main>
-              <SidebarTrigger />
-              {children}
-            </main>
-          </SidebarProvider>
+      <QueryProvider>
+        <SidebarProvider defaultOpen={defaultOpen}>
+          <AppSidebar />
+          <SidebarInset>
+            <Header />
+            <QueryProvider>
+              <main className="w-full p-4">{children}</main>
+            </QueryProvider>
+          </SidebarInset>
+        </SidebarProvider>
         </QueryProvider>
       </body>
     </html>
