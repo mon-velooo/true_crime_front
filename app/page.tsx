@@ -1,18 +1,13 @@
 "use client";
-import { CustomKPIChart } from "@/components/charts/CustomKPIChart";
+
 import { OffencesCrimesCountPieChart } from "@/components/charts/OffencesCrimesCountPieChart";
 import { Container } from "@/components/layout/Container/Container";
 import Grid from "@/components/layout/Grid/Grid";
-import { Card } from "@/components/ui/card";
 import { DateRangePicker } from "@/components/ui/DateRangePicker";
 import * as React from "react";
 import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
 import { KpisList } from "@/components/lists/KpisList";
-import { ChartConfig } from "@/components/ui/chart";
-import { fetchDistricts } from "@/services/districts/fetchDistricts";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import formatDate from "@/components/utils/formatDate";
 
 export default function Home() {
   const start = new Date("03-05-2024");
@@ -24,11 +19,6 @@ export default function Home() {
 
   const handleDateChange = (range: DateRange) => {
     setDateRange(range);
-  };
-
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return '';
-    return format(date, 'MMMM dd, yyyy');
   };
 
   return (
@@ -54,7 +44,7 @@ export default function Home() {
             dateRange={dateRange}
           />
 
-          <KpisList rangeStartDate="2020-01-01" rangeEndDate="2021-01-30" />
+          <KpisList dateRange={dateRange} />
         </Grid>
       </Container>
     </>
