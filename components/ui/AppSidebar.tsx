@@ -10,16 +10,23 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
+  SidebarFooter
 } from '@/components/ui/sidebar';
-import { Home, Map } from 'lucide-react';
+import { Home, Map, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 export const items = [
   {
     title: 'Home',
     url: '/',
     icon: Home
+  },
+  {
+    title: 'Dashboard',
+    url: '/dashboard',
+    icon: LayoutDashboard
   },
   {
     title: 'Interactive map',
@@ -55,6 +62,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <ThemeToggle />
+      </SidebarFooter>
     </Sidebar>
   );
 }
