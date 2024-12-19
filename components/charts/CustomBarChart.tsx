@@ -24,6 +24,7 @@ import { CrimeByDistrictData } from "@/types/graphs";
 import { fetchDistricts } from "@/services/districts/fetchDistricts";
 import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard";
 import { capitalizeFirstLetter, toTitleCase } from "../utils/formatString";
+import { formatNumber } from "../utils/formatNumber";
 
 const chartConfig = {
   crimeCount: {
@@ -116,7 +117,7 @@ export function CustomBarChart({
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
           {capitalizeFirstLetter(toTitleCase(chartData[0].district))} is in head
-          with {chartData[0].crimeCount} crimes
+          with {formatNumber(chartData[0].crimeCount)} crimes
         </div>
         <div className="leading-none text-muted-foreground">
           Showing total crimes for the selected period

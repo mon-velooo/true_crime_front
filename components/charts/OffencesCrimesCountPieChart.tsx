@@ -21,6 +21,7 @@ import { DateRange } from "react-day-picker";
 import { Label, Pie, PieChart } from "recharts";
 import { Skeleton } from "../ui/skeleton";
 import { CustomRadialBarSkeletonCard } from "../skeletons/CustomRadialBarSkeletonCard";
+import { formatNumber } from "../utils/formatNumber";
 
 interface CustomPieChartProps {
   title: string;
@@ -154,7 +155,7 @@ export function OffencesCrimesCountPieChart({
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          {data[0].label} has the most crimes with {data[0].value}
+          {data[0].label} has the most crimes with {formatNumber(data[0].value)}
         </div>
         <div className="leading-none text-muted-foreground">
           Showing main offences for the selected period
