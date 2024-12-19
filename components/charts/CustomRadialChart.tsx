@@ -21,6 +21,8 @@ import { fetchSecurityFeeling } from "@/services/kpis/fetchKpis";
 import { KpiSecurityFeelingData } from "@/types/kpis";
 import { useQuery } from "@tanstack/react-query";
 import { CustomRadialBarSkeletonCard } from "../skeletons/CustomRadialBarSkeletonCard";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
 
 const REFERENCE_VALUE = 1.3;
 
@@ -49,22 +51,23 @@ const chartConfig = {
 interface CustomVerticalBarChartProps {
   title: string;
   description: string;
-  rangeStartDate: string;
-  rangeEndDate: string;
+  dateRange?: DateRange;
 }
 
 export function CustomRadialChart({
   title,
   description,
-  rangeStartDate,
-  rangeEndDate,
+  dateRange,
 }: CustomVerticalBarChartProps) {
+  const startDate = format(dateRange.from, "MM-dd-yyyy");
+  const endDate = format(dateRange.to, "MM-dd-yyyy");
+
   const { data: kpi, isLoading } = useQuery<KpiSecurityFeelingData[]>({
-    queryKey: ["securityFeeling", rangeStartDate, rangeEndDate],
+    queryKey: ["securityFeeling", dateRange],
     queryFn: () =>
       fetchSecurityFeeling({
-        rangeStartDate,
-        rangeEndDate,
+        rangeStartDate: dateRange ? startDate : "",
+        rangeEndDate: dateRange ? endDate : "",
       }),
   });
 

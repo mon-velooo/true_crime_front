@@ -16,7 +16,7 @@ export const KpisList = ({ dateRange }: CustomKPIChartProps) => {
   const endDate = format(dateRange.to, "MM-dd-yyyy");
 
   const { data: kpis, isLoading } = useQuery<KpiData[]>({
-    queryKey: ["kpis", dateRange ? startDate : "", dateRange ? endDate : ""],
+    queryKey: ["kpis", dateRange],
     queryFn: () =>
       fetchKpis({
         rangeStartDate: dateRange ? startDate : "",

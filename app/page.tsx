@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { OffencesCrimesCountPieChart } from '@/components/charts/OffencesCrimesCountPieChart';
-import { CustomRadialChart } from '@/components/charts/CustomRadialChart';
-import { Container } from '@/components/layout/Container/Container';
-import Grid from '@/components/layout/Grid/Grid';
-import { DateRangePicker } from '@/components/ui/DateRangePicker';
-import * as React from 'react';
-import { DateRange } from 'react-day-picker';
-import { KpisList } from '@/components/lists/KpisList';
-import formatDate from '@/components/utils/formatDate';
+import { OffencesCrimesCountPieChart } from "@/components/charts/OffencesCrimesCountPieChart";
+import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
+import { Container } from "@/components/layout/Container/Container";
+import Grid from "@/components/layout/Grid/Grid";
+import { DateRangePicker } from "@/components/ui/DateRangePicker";
+import * as React from "react";
+import { DateRange } from "react-day-picker";
+import { KpisList } from "@/components/lists/KpisList";
+import formatDate from "@/components/utils/formatDate";
 
 export default function Home() {
-  const start = new Date('03-05-2024');
+  const start = new Date("03-05-2024");
   const today = new Date();
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
     from: start,
-    to: today
+    to: today,
   });
 
   const handleDateChange = (range: DateRange) => {
@@ -33,7 +33,7 @@ export default function Home() {
           cols={{
             mobile: 3,
             tablet: 2,
-            desktop: 2
+            desktop: 2,
           }}
           gap={2}
           className="pb-4"
@@ -48,9 +48,8 @@ export default function Home() {
 
           <CustomRadialChart
             title="Security rate"
-            description="January - June 2024"
-            rangeStartDate="2024-01-01"
-            rangeEndDate="2024-03-30"
+            description={`${formatDate(dateRange?.from)} - ${formatDate(dateRange?.to)}`}
+            dateRange={dateRange}
           />
         </Grid>
       </Container>
