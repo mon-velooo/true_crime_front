@@ -5,10 +5,11 @@ import EventActivity from '../eventActivity/EventActivity';
 import MapView from '../mapView/MapView';
 import { fetchCrimes } from '@/services/crimes/fetchCrimes';
 import type { Viewport, Crime } from '@/types/crimes';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
+import { useAuth } from '@/providers/AuthProvider';
 
 export default function MapContainer({ className }: { className: string }) {
+  const { user } = useAuth();
+
   const [viewport, setViewport] = useState<Viewport>({
     longitude: -73.955242,
     latitude: 40.72061,
@@ -30,12 +31,15 @@ export default function MapContainer({ className }: { className: string }) {
   const { data: crimes } = useQuery({
     queryKey: ['crimes', debouncedViewport.longitude, debouncedViewport.latitude],
     queryFn: () =>
-      fetchCrimes({
-        longitude: debouncedViewport.longitude,
-        lattitude: debouncedViewport.latitude,
-        zoom: debouncedViewport.zoom,
-        startDate: '2024-03-08'
-      })
+      fetchCrimes(
+        {
+          longitude: debouncedViewport.longitude,
+          lattitude: debouncedViewport.latitude,
+          zoom: debouncedViewport.zoom,
+          startDate: '2024-03-08'
+        },
+        user?.token
+      )
   });
 
   return (

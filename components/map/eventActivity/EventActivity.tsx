@@ -39,7 +39,7 @@ export default function EventActivity({
     <div className="w-full">
       <h2 className="font-semibold mb-4">Events activity</h2>
       <div className="relative">
-        <ScrollArea className="h-[calc(100vh-550px)]">
+        <ScrollArea className="h-[calc(100vh-510px)]">
           <div className="space-y-4">
             {crimes?.crimes.map((crime) => (
               <div
