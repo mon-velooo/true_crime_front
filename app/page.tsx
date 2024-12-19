@@ -48,7 +48,7 @@ export default function SignIn() {
         title: 'Access Granted',
         description: 'Welcome to NYPD Crime Analysis Platform.'
       });
-      router.push('/app');
+      router.push('/dashboard');
     },
     onError: (error) => {
       toast({

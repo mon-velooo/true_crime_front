@@ -28,7 +28,7 @@ export default function MapContainer({ className }: { className: string }) {
     return () => clearTimeout(handler);
   }, [viewport]);
 
-  const { data: crimes } = useQuery({
+  const { data: crimes, isLoading } = useQuery({
     queryKey: ['crimes', debouncedViewport.longitude, debouncedViewport.latitude],
     queryFn: () =>
       fetchCrimes(
@@ -39,7 +39,9 @@ export default function MapContainer({ className }: { className: string }) {
           startDate: '2024-03-08'
         },
         user?.token
-      )
+      ),
+    enabled: !!user?.token,
+    initialData: { crimes: [] }
   });
 
   return (
