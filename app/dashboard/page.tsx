@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChartConfig } from "@/components/ui/chart";
 import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
+import { CustomBarChart } from "@/components/charts/CustomBarChart";
 
 export default function Home() {
   const config = {
@@ -38,14 +39,6 @@ export default function Home() {
     setDateRange(range);
   };
 
-  const [rangeStartDate, setRangeStartDate] = useState("2024-09-30");
-  const [rangeEndDate, setRangeEndDate] = useState("2024-09-30");
-
-  const { data: districts } = useQuery({
-    queryKey: ["districts", rangeStartDate, rangeEndDate],
-    queryFn: () => fetchDistricts(rangeStartDate, rangeEndDate),
-  });
-
   return (
     <>
       <Container>
@@ -64,13 +57,19 @@ export default function Home() {
         >
           <CustomVerticalBarChart
             title="Crime distribution by twice hour"
-            description="Number of reported crimes throughout each pair hour during the period"
+            description="Number of reported crimes throughout each pair hour"
+            dateRange={dateRange}
+          />
+
+          <CustomBarChart
+            title="Top crimes by district"
+            description="Number of reported crimes throughout each district"
             dateRange={dateRange}
           />
 
           <OffencesCrimesCountPieChart
             title="Breakdown of crime types"
-            description="Significant crimes number reported by type during the period"
+            description="Significant crimes number reported by type"
             dateRange={dateRange}
           />
 

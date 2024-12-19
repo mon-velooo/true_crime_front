@@ -19,3 +19,17 @@ export interface ApiCrimeByHourData {
   average: number;
   averagePastTime: number;
 }
+
+export interface ApiCrimeByDistrictData {
+  district: {
+    id: number;
+    name: string;
+  };
+  crimeCount: number;
+}
+
+export interface CrimeByDistrictData {
+  district: string;
+  crimeCount: number;
+  fill: string;
+}
