@@ -8,6 +8,11 @@ import { DateRangePicker } from "@/components/ui/DateRangePicker";
 import * as React from "react";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
+import { KpisList } from "@/components/lists/KpisList";
+import { ChartConfig } from "@/components/ui/chart";
+import { fetchDistricts } from "@/services/districts/fetchDistricts";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const start = new Date("03-05-2024");
@@ -42,31 +47,14 @@ export default function Home() {
           gap={2}
           className="pb-4"
         >
+
           <OffencesCrimesCountPieChart
             title="Breakdown of crime types"
             description={`${formatDate(dateRange?.from)} - ${formatDate(dateRange?.to)}`}
             dateRange={dateRange}
           />
 
-          <div className="grid grid-cols-3 sm:grid-cols-1 gap-2">
-            <Card>
-              <div className="flex align-middle justify-between p-4">
-                <h2 className="text-lg font-semibold">Daily KPIs</h2>
-              </div>
-            </Card>
-            <div className="grid grid-cols-2 gap-2">
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
-              <CustomKPIChart title="Nombre d'infractions" description="300K" />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <CustomKPIChart title="Nombre de victimes" description="300K" />
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <CustomKPIChart title="Nombre d'infractions" description="300K" />
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
-            </div>
-          </div>
+          <KpisList rangeStartDate="2020-01-01" rangeEndDate="2021-01-30" />
         </Grid>
       </Container>
     </>
