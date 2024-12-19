@@ -17,6 +17,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { KpiSecurityFeelingData } from "@/types/kpis";
+import { fetchHours } from "@/services/hours/fetchHours";
+import { CrimeByHourStatsData } from "@/types/graphs";
+import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard";
 const chartData = [
   {
     hour: "0",
@@ -118,7 +125,7 @@ const chartData = [
 
 const chartConfig = {
   crimeCount: {
-    label: "Crime count",
+    label: "Crimes",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
@@ -126,12 +133,30 @@ const chartConfig = {
 interface CustomVerticalBarChartProps {
   title: string;
   description: string;
+  dateRange?: DateRange;
 }
 
 export function CustomVerticalBarChart({
   title,
   description,
+  dateRange,
 }: CustomVerticalBarChartProps) {
+  const startDate = format(dateRange.from, "MM-dd-yyyy");
+  const endDate = format(dateRange.to, "MM-dd-yyyy");
+
+  const { data: hoursCrimeData, isLoading } = useQuery<CrimeByHourStatsData>({
+    queryKey: ["hoursCrime", dateRange],
+    queryFn: () =>
+      fetchHours({
+        rangeStartDate: dateRange ? startDate : "",
+        rangeEndDate: dateRange ? endDate : "",
+      }),
+  });
+
+  if (isLoading) {
+    return <HoursGraphSkeletonCard />;
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -142,7 +167,7 @@ export function CustomVerticalBarChart({
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={hoursCrimeData.stats}
             margin={{
               top: 20,
             }}

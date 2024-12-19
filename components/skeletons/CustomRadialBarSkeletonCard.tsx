@@ -11,12 +11,12 @@ import {
 export function CustomRadialBarSkeletonCard() {
   return (
     <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
+      <CardHeader>
         <CardTitle>
-          <Skeleton className="h-4 w-[150px]" />
+          <Skeleton className="h-6 w-[200px]" />
         </CardTitle>
         <CardDescription>
-          <Skeleton className="h-3 w-[100px] mt-2" />
+          <Skeleton className="h-4 w-[150px] mt-2" />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-center justify-center pb-0">
@@ -24,12 +24,12 @@ export function CustomRadialBarSkeletonCard() {
           <Skeleton className="h-[200px] w-[200px] rounded-full" />
         </div>
       </CardContent>
-      <CardFooter className="flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-4 w-[200px]" />
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          <Skeleton className="h-4 w-[180px]" />
         </div>
-        <div>
-          <Skeleton className="h-3 w-[250px]" />
+        <div className="leading-none text-muted-foreground">
+          <Skeleton className="h-4 w-[180px]" />
         </div>
       </CardFooter>
     </Card>
