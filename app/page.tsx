@@ -16,6 +16,7 @@ import { fetchHours } from "@/services/hours/fetchHours";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChartConfig } from "@/components/ui/chart";
+import { MostDangerousNeighborhoods } from "@/components/charts/MostDangerousNeighborhoods";
 
 export default function Home() {
   const config = {
@@ -40,31 +41,6 @@ export default function Home() {
     setDateRange(range);
   };
 
-  const [rangeStartDate, setRangeStartDate] = useState("2024-09-30");
-  const [rangeEndDate, setRangeEndDate] = useState("2024-09-30");
-
-  const { data: districts } = useQuery({
-    queryKey: ["districts", rangeStartDate, rangeEndDate],
-    queryFn: () => fetchDistricts(rangeStartDate, rangeEndDate),
-  });
-
-  const {
-    data: hours,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["hours", rangeStartDate, rangeEndDate],
-    queryFn: () => fetchHours(rangeStartDate, rangeEndDate),
-  });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
-  const formattedData = hours.stats.map((item) => ({
-    hour: item.hour,
-    crimeCount: item.crimeCount,
-  }));
-
   return (
     <>
       <Container>
@@ -81,7 +57,7 @@ export default function Home() {
           gap={2}
           className="pb-4"
         >
-          <CustomVerticalBarChart
+          {/* <CustomVerticalBarChart
             title="Crime Distribution by Hour"
             description="This chart shows the number of reported crimes throughout each hour of the day."
             data={formattedData}
@@ -93,6 +69,10 @@ export default function Home() {
             config={config}
             setRangeStartDate={setRangeStartDate}
             setRangeEndDate={setRangeEndDate}
+          /> */}
+          <MostDangerousNeighborhoods
+            title="Most dangerous neighborhoods"
+            dateRange={dateRange}
           />
           <OffencesCrimesCountPieChart
             title="Breakdown of crime types"
