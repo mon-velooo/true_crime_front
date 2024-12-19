@@ -1,7 +1,6 @@
 "use client";
 
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
-import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { OffencesCrimesCountPieChart } from "@/components/charts/OffencesCrimesCountPieChart";
 import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
 import { Container } from "@/components/layout/Container/Container";
@@ -16,6 +15,7 @@ import { fetchHours } from "@/services/hours/fetchHours";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChartConfig } from "@/components/ui/chart";
+import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 
 export default function Home() {
   const config = {
@@ -84,9 +84,13 @@ export default function Home() {
           <CustomVerticalBarChart
             title="Crime Distribution by Hour"
             description="This chart shows the number of reported crimes throughout each hour of the day."
+          />
+          {/* <CustomVerticalBarChart
+            title="Crime Distribution by Hour"
+            description="This chart shows the number of reported crimes throughout each hour of the day."
             data={formattedData}
             config={config}
-          />
+          /> */}
           <CustomBarChart
             title="Most dangerous neighborhoods"
             data={districts}

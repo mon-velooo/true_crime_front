@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+"use client";
+
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard"; // Importer le squelette pour le graphique
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
 import {
   Card,
@@ -15,76 +15,134 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
+const chartData = [
+  {
+    hour: "0",
+    crimeCount: 55,
+  },
+  {
+    hour: "1",
+    crimeCount: 48,
+  },
+  {
+    hour: "2",
+    crimeCount: 23,
+  },
+  {
+    hour: "3",
+    crimeCount: 30,
+  },
+  {
+    hour: "4",
+    crimeCount: 40,
+  },
+  {
+    hour: "5",
+    crimeCount: 16,
+  },
+  {
+    hour: "6",
+    crimeCount: 16,
+  },
+  {
+    hour: "7",
+    crimeCount: 34,
+  },
+  {
+    hour: "8",
+    crimeCount: 78,
+  },
+  {
+    hour: "9",
+    crimeCount: 59,
+  },
+  {
+    hour: "10",
+    crimeCount: 49,
+  },
+  {
+    hour: "11",
+    crimeCount: 55,
+  },
+  {
+    hour: "12",
+    crimeCount: 69,
+  },
+  {
+    hour: "13",
+    crimeCount: 84,
+  },
+  {
+    hour: "14",
+    crimeCount: 93,
+  },
+  {
+    hour: "15",
+    crimeCount: 99,
+  },
+  {
+    hour: "16",
+    crimeCount: 90,
+  },
+  {
+    hour: "17",
+    crimeCount: 101,
+  },
+  {
+    hour: "18",
+    crimeCount: 82,
+  },
+  {
+    hour: "19",
+    crimeCount: 71,
+  },
+  {
+    hour: "20",
+    crimeCount: 78,
+  },
+  {
+    hour: "21",
+    crimeCount: 46,
+  },
+  {
+    hour: "22",
+    crimeCount: 51,
+  },
+  {
+    hour: "23",
+    crimeCount: 41,
+  },
+];
+
+const chartConfig = {
+  crimeCount: {
+    label: "Crime count",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig;
 
 interface CustomVerticalBarChartProps {
   title: string;
-  description?: string;
-  data: { hour: string; crimeCount: number }[];
-  config: ChartConfig;
-  footerText?: string;
-}
-
-function CustomTooltip({ payload, label }: any) {
-  if (payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div
-        style={{
-          backgroundColor: "#fff",
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-          padding: "8px",
-          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
-          fontSize: "12px",
-          color: "#333",
-        }}
-      >
-        <p style={{ margin: "0", fontWeight: "bold" }}>{`Heure: ${label}:00`}</p>
-        <p style={{ margin: "0" }}>
-          {`Nombre de crimes: `}
-          <strong>{data.crimeCount}</strong>
-        </p>
-      </div>
-    );
-  }
-  return null;
+  description: string;
 }
 
 export function CustomVerticalBarChart({
   title,
   description,
-  data,
-  config,
-  footerText,
 }: CustomVerticalBarChartProps) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Simuler un délai de chargement de 3 secondes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); // Après 3 secondes, les données sont considérées comme chargées
-    }, 3000);
-
-    return () => clearTimeout(timer); // Nettoyer le timer au démontage du composant
-  }, []);
-
-  if (isLoading) {
-    return <HoursGraphSkeletonCard />;
-  }
-
-  // Si les données sont chargées, afficher le graphique
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={config}>
+        <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={data}
+            data={chartData}
             margin={{
               top: 20,
             }}
@@ -93,15 +151,22 @@ export function CustomVerticalBarChart({
             <XAxis
               dataKey="hour"
               tickLine={false}
-              tickMargin={0}
+              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => `${value}:00`}
-              angle={-30}
-              textAnchor="end"
+              tickFormatter={(value) => value.slice(0, 3)}
             />
-            <YAxis />
-            <ChartTooltip cursor={false} content={<CustomTooltip />} />
-            <Bar dataKey="crimeCount" fill="var(--color-desktop)" radius={8} />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar dataKey="crimeCount" fill="var(--color-crimeCount)" radius={8}>
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -109,9 +174,9 @@ export function CustomVerticalBarChart({
         <div className="flex gap-2 font-medium leading-none">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
-        {footerText && (
-          <div className="leading-none text-muted-foreground">{footerText}</div>
-        )}
+        <div className="leading-none text-muted-foreground">
+          Showing total visitors for the last 6 months
+        </div>
       </CardFooter>
     </Card>
   );
