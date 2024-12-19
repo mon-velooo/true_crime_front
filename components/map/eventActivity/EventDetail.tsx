@@ -25,7 +25,7 @@ const EventDetailContent = ({ crime, crimeIsLoading }) => {
 
   return (
     <>
-      <ScrollArea className="h-[calc(100vh-550px)]">
+      <ScrollArea className="h-[calc(100vh-510px)]">
         <Card className="bg-card-secondary border border-border-secondary rounded-md mb-4">
           <CardContent className="p-6 space-y-6">
             <div className="flex items-start justify-between">

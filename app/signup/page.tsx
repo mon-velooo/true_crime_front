@@ -1,5 +1,4 @@
 'use client';
-
 import { useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -7,54 +6,55 @@ import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import AuthForm from '@/components/form/AuthForm';
 import { useMutation } from '@tanstack/react-query';
-import { signIn } from '@/services/auth/signin';
-import { useAuth } from '@/providers/AuthProvider';
+import { signUp } from '@/services/auth/signup';
 import { useRouter } from 'next/navigation';
 
 type FormErrors = Record<string, { message?: string }>;
 
-type FormValues = {
-  email: string;
-  password: string;
-};
-
-const formSchema = z.object({
-  email: z.string().email({
-    message: 'Email must be a valid email address.'
-  }),
-  password: z.string().min(8, {
-    message: 'Password must be at least 8 characters.'
+const formSchema = z
+  .object({
+    email: z.string().email({
+      message: 'Email must be a valid email address.'
+    }),
+    password: z.string().min(8, {
+      message: 'Password must be at least 8 characters.'
+    }),
+    confirmPassword: z.string()
   })
-});
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords must match',
+    path: ['confirmPassword']
+  });
 
-export default function SignIn() {
+type FormValues = z.infer<typeof formSchema>;
+
+export default function SignUp() {
   const { toast } = useToast();
-  const { signIn: authSignIn } = useAuth();
   const router = useRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: ''
     }
   });
 
   const mutation = useMutation({
-    mutationFn: signIn,
-    onSuccess: async (data) => {
-      await authSignIn(data.username, data.email, data.role, data.token, data.id);
+    mutationFn: signUp,
+    onSuccess: (data) => {
       toast({
-        title: 'Access Granted',
-        description: 'Welcome to NYPD Crime Analysis Platform.'
+        title: 'Sign up successful',
+        description: `Welcome, ${data.email}!`
       });
-      router.push('/app');
+      router.push('/');
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Authentication Failed',
-        description: `An error occured: ${error instanceof Error ? error.message : error}`
+        title: 'Sign up failed',
+        description: `Error: ${error instanceof Error ? error.message : error}`
       });
     }
   });
@@ -73,13 +73,14 @@ export default function SignIn() {
   );
 
   const onSubmit = (values: FormValues) => {
-    mutation.mutate(values);
+    const { email, password } = values;
+    mutation.mutate({ email, password });
   };
 
   return (
     <AuthForm<FormValues>
-      title="NYPD Crime Analysis Platform"
-      description="Access NYC's comprehensive crime data dashboard."
+      title="Sign Up"
+      description="Enter your email and password to sign up"
       fields={[
         {
           label: 'Email',
@@ -94,17 +95,25 @@ export default function SignIn() {
           id: 'password',
           placeholder: '',
           name: 'password'
+        },
+        {
+          label: 'Confirm Password',
+          type: 'password',
+          id: 'confirmPassword',
+          placeholder: '',
+          name: 'confirmPassword'
         }
       ]}
       form={form}
       onSubmit={onSubmit}
       onError={onError}
       isLoading={mutation.status === 'pending'}
-      image={'/background.webp'}
-      buttonText="Sign In"
-      redirectText="Don't have an account? "
-      redirectButton="Sign up"
-      redirectLink="/signup"
+      image="/nightBackground.webp"
+      buttonText="Sign Up"
+      redirectText="Already have an account? "
+      redirectButton="Sign In"
+      redirectLink="/"
+      reverseGrid={true}
     />
   );
 }
