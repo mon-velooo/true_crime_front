@@ -14,11 +14,21 @@ import formatDate from "@/components/utils/formatDate";
 import { fetchDistricts } from "@/services/districts/fetchDistricts";
 import { fetchHours } from "@/services/hours/fetchHours";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { CustomLineChart } from "@/components/charts/CustomLineChart";
+import { useState } from "react";
 import { ChartConfig } from "@/components/ui/chart";
 
 export default function Home() {
+  const config = {
+    desktop: {
+      label: "Desktop",
+      color: "hsl(var(--chart-1))",
+    },
+    mobile: {
+      label: "Mobile",
+      color: "hsl(var(--chart-2))",
+    },
+  } satisfies ChartConfig;
+
   const start = new Date("03-05-2024");
   const today = new Date();
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
