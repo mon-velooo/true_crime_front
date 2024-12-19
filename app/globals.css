@@ -103,3 +103,13 @@ a {
     @apply bg-background text-foreground;
   }
 }
+
+/* Customize NProgress bar */
+#nprogress .bar {
+  background: #29d;
+  height: 3px;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+}
