@@ -24,12 +24,11 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { fetchHours } from "@/services/hours/fetchHours";
 import { CrimeByHourStatsData } from "@/types/graphs";
 import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard";
+import { formatNumber } from "../utils/formatNumber";
 import { useDateRange } from "@/providers/DateRangeProvider";
 
 const chartConfig = {
@@ -61,7 +60,7 @@ export function CustomVerticalBarChart({
         rangeStartDate: dates.startDate,
         rangeEndDate: dates.endDate,
       }),
-      enabled: !!dates.startDate && !!dates.endDate,
+    enabled: !!dates.startDate && !!dates.endDate,
   });
 
   if (isLoading) {
@@ -118,7 +117,7 @@ export function CustomVerticalBarChart({
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Median {hoursCrimeData.average} and passed{" "}
+          Median {formatNumber(hoursCrimeData.average)} and passed{" "}
           {hoursCrimeData.averagePastTime} times
         </div>
         <div className="leading-none text-muted-foreground">

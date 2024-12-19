@@ -20,6 +20,8 @@ import { TrendingDown, TrendingUp } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { Label, Pie, PieChart } from "recharts";
 import { Skeleton } from "../ui/skeleton";
+import { CustomRadialBarSkeletonCard } from "../skeletons/CustomRadialBarSkeletonCard";
+import { formatNumber } from "../utils/formatNumber";
 import { useDateRange } from "@/providers/DateRangeProvider";
 
 interface CustomPieChartProps {
@@ -44,7 +46,7 @@ export function OffencesCrimesCountPieChart({
         rangeStartDate: dates.startDate,
         rangeEndDate: dates.endDate,
       }),
-      enabled: !!dates.startDate && !!dates.endDate,
+    enabled: !!dates.startDate && !!dates.endDate,
   });
 
   const data =
@@ -55,15 +57,7 @@ export function OffencesCrimesCountPieChart({
     })) || [];
 
   if (isLoading) {
-    return (
-      <Skeleton className="flex flex-col p-4">
-        <Skeleton className="h-6 w-3/4 mb-1" />
-        <Skeleton className="h-6 w-1/2" />
-        <div className="flex justify-center items-center h-full">
-          <Skeleton className="h-[248px] w-[248px] rounded-full" />
-        </div>
-      </Skeleton>
-    );
+    return <CustomRadialBarSkeletonCard />;
   }
 
   if (error) {
@@ -106,13 +100,9 @@ export function OffencesCrimesCountPieChart({
 
   return (
     <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
-        <div className="flex justify-between w-full gap-2">
-          <div>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </div>
-        </div>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -163,6 +153,14 @@ export function OffencesCrimesCountPieChart({
           </PieChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          {data[0].label} has the most crimes with {formatNumber(data[0].value)}
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing main offences for the selected period
+        </div>
+      </CardFooter>
     </Card>
   );
 }

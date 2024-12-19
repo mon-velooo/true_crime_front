@@ -1,127 +1,124 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Bar, BarChart, XAxis, YAxis } from 'recharts';
+import { TrendingUp } from "lucide-react";
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useEffect, useState } from 'react';
-import { DistrictGraphSkeletonCard } from '../skeletons/DistrictGraphSkeletonCard'; // Import du squelette
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { CrimeByDistrictData } from "@/types/graphs";
+import { fetchDistricts } from "@/services/districts/fetchDistricts";
+import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard";
+import { capitalizeFirstLetter, toTitleCase } from "../utils/formatString";
+import { formatNumber } from "../utils/formatNumber";
+import { useDateRange } from "@/providers/DateRangeProvider";
+
+const chartConfig = {
+  crimeCount: {
+    label: "Crimes",
+  },
+  brooklyn: {
+    label: "Brooklyn",
+    color: "hsl(var(--chart-1))",
+  },
+  manhattan: {
+    label: "Manhattan",
+    color: "hsl(var(--chart-2))",
+  },
+  queens: {
+    label: "Queens",
+    color: "hsl(var(--chart-3))",
+  },
+  bronx: {
+    label: "Bronx",
+    color: "hsl(var(--chart-4))",
+  },
+  statenIsland: {
+    label: "Staten Island",
+    color: "hsl(var(--chart-5))",
+  },
+} satisfies ChartConfig;
 
 interface CustomBarChartProps {
   title: string;
-  description?: string;
-  data: Array<{ district: { id: number, name: string }, crimeCount: number }>;
-  config: ChartConfig;
-  footerText?: string;
-  setRangeStartDate: (date: string) => void;
-  setRangeEndDate: (date: string) => void;
+  description: string;
 }
 
-export function CustomBarChart({ title, description, data, config, footerText, setRangeStartDate, setRangeEndDate }: CustomBarChartProps) {
-  const [isLoading, setIsLoading] = useState(true);
+export function CustomBarChart({ title, description }: CustomBarChartProps) {
+  const { dates } = useDateRange();
 
-  // Simuler un délai de chargement de 3 secondes (ou tout autre délai souhaité)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // Ajuster la durée ici
-
-    return () => clearTimeout(timer);
-  }, []);
+  const { data: chartData, isLoading } = useQuery<CrimeByDistrictData[]>({
+    queryKey: ["topDistrictsCrime", dates],
+    queryFn: () =>
+      fetchDistricts({
+        rangeStartDate: dates.startDate,
+        rangeEndDate: dates.endDate,
+      }),
+    enabled: !!dates.startDate && !!dates.endDate,
+  });
 
   if (isLoading) {
-    return <DistrictGraphSkeletonCard />; // Affiche le squelette pendant le chargement
+    return <HoursGraphSkeletonCard />;
   }
-
-  if (!data) return null;
-
-  const chartData = data.map((item) => ({ 
-    label: item.district.name,
-    value: item.crimeCount,
-  }));
-
-  const today = new Date('2024-09-30');
-
-  const getDateRange = (period: string) => {
-    let startDate = new Date(today);
-    let endDate = new Date(today);
-
-    if (period === 'day') {
-      startDate.setDate(today.getDate() - 1);
-      endDate = today;
-    } else if (period === 'month') {
-      startDate.setMonth(today.getMonth() - 1);
-      startDate.setDate(1);
-      endDate = new Date(today.getFullYear(), today.getMonth(), 0);
-    } else if (period === 'year') {
-      startDate.setFullYear(today.getFullYear() - 1);
-      startDate.setMonth(0);
-      startDate.setDate(1);
-      endDate = new Date(today.getFullYear() - 1, 11, 31);
-    }
-
-    return {
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
-    };
-  };
-
-  const handleSelectChange = (value: string) => {
-    const { startDate, endDate } = getDateRange(value);
-    setRangeStartDate(startDate);
-    setRangeEndDate(endDate);
-  };
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex justify-between align-middle gap-2">
-          <CardTitle>{title}</CardTitle>
-          <Select onValueChange={handleSelectChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Durée" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="day" defaultChecked>Last day</SelectItem>
-                <SelectItem value="month">Last month</SelectItem>
-                <SelectItem value="year">Last year</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        {description && <CardDescription>{description}</CardDescription>}
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={config}>
+        <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
             data={chartData}
             layout="vertical"
             margin={{
-              left: -20,
+              left: 20,
             }}
           >
-            <XAxis type="number" dataKey="value" hide />
             <YAxis
-              dataKey="label"
+              dataKey="district"
               type="category"
               tickLine={false}
-              tickMargin={-3}
+              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 4)}
+              tickFormatter={(value) =>
+                chartConfig[value as keyof typeof chartConfig]?.label
+              }
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideIndicator />} />
-            <Bar dataKey="value" fill="var(--color-desktop)" radius={15} />
+            <XAxis dataKey="crimeCount" type="number" hide />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar dataKey="crimeCount" layout="vertical" radius={5} />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      {footerText && (
-        <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="leading-none text-muted-foreground">{footerText}</div>
-        </CardFooter>
-      )}
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          {capitalizeFirstLetter(toTitleCase(chartData[0].district))} is in head
+          with {formatNumber(chartData[0].crimeCount)} crimes
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing total crimes for the selected period
+        </div>
+      </CardFooter>
     </Card>
   );
 }
