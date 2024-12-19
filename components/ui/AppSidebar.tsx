@@ -11,11 +11,14 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter
+  SidebarFooter,
+  SidebarHeader
 } from '@/components/ui/sidebar';
-import { Home, Map, LayoutDashboard } from 'lucide-react';
+import { Home, Map, LayoutDashboard, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '../theme/ThemeToggle';
+import { AppName } from './AppName';
+import SignOut from '../auth/SignOut';
 
 export const items = [
   {
@@ -25,7 +28,7 @@ export const items = [
   },
   {
     title: 'Dashboard',
-    url: '/dashboard',
+    url: '/global',
     icon: LayoutDashboard
   },
   {
@@ -37,20 +40,36 @@ export const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const basePath = pathname?.split('/')[1];
+
+  const isLinkActive = (itemUrl: string) => {
+    const currentPath = pathname?.endsWith('/') ? pathname.slice(0, -1) : pathname;
+    
+    if (itemUrl === '/' && currentPath === `/${basePath}`) {
+      return true;
+    }
+
+    const targetPath = `/${basePath}${itemUrl}`;
+    return currentPath === targetPath;
+  };
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <AppName name="New York City" logo={Building2} plan="Crime data" />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>True crime</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                const isActive = pathname === item.url;
+                const isActive = isLinkActive(item.url);
+
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild className={cn('w-full', isActive && 'bg-accent text-accent-foreground')}>
-                      <Link href={item.url} className="flex items-center gap-2">
+                      <Link href={`/${basePath}${item.url}`} className="flex items-center gap-2">
                         <item.icon className={cn('h-4 w-4', isActive && 'text-accent-foreground')} />
                         <span className={cn(isActive && 'font-semibold')}>{item.title}</span>
                       </Link>
@@ -62,8 +81,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <ThemeToggle />
+      <SidebarFooter className="flex flex-row justify-between">
+        <SignOut className="w-full group-data-[collapsible=icon]:hidden" />
+        <ThemeToggle className="w-3/12 group-data-[collapsible=icon]:w-full" />
       </SidebarFooter>
     </Sidebar>
   );
