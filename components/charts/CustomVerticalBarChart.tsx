@@ -30,6 +30,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchHours } from "@/services/hours/fetchHours";
 import { CrimeByHourStatsData } from "@/types/graphs";
 import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard";
+import { useDateRange } from "@/providers/DateRangeProvider";
 
 const chartConfig = {
   crimeCount: {
@@ -45,24 +46,22 @@ const chartConfig = {
 interface CustomVerticalBarChartProps {
   title: string;
   description: string;
-  dateRange?: DateRange;
 }
 
 export function CustomVerticalBarChart({
   title,
   description,
-  dateRange,
 }: CustomVerticalBarChartProps) {
-  const startDate = format(dateRange.from, "MM-dd-yyyy");
-  const endDate = format(dateRange.to, "MM-dd-yyyy");
+  const { dates } = useDateRange();
 
   const { data: hoursCrimeData, isLoading } = useQuery<CrimeByHourStatsData>({
-    queryKey: ["hoursCrime", dateRange],
+    queryKey: ["hoursCrime", dates],
     queryFn: () =>
       fetchHours({
-        rangeStartDate: dateRange ? startDate : "",
-        rangeEndDate: dateRange ? endDate : "",
+        rangeStartDate: dates.startDate,
+        rangeEndDate: dates.endDate,
       }),
+      enabled: !!dates.startDate && !!dates.endDate,
   });
 
   if (isLoading) {
