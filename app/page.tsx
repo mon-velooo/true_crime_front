@@ -10,6 +10,7 @@ import { ChartConfig } from "@/components/ui/chart";
 import { DateRangePicker } from "@/components/ui/DateRangePicker";
 import { fetchDistricts } from "@/services/districts/fetchDistricts";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const pieData = [
@@ -64,10 +65,14 @@ export default function Home() {
     },
   } satisfies ChartConfig;
 
-  const { data: districts } = useQuery({
-    queryKey: ["districts"],
-    queryFn: fetchDistricts,
+  const [rangeStartDate, setRangeStartDate] = useState('2024-09-30');
+  const [rangeEndDate, setRangeEndDate] = useState('2024-09-30');
+  
+  const { data: districts, isLoading, error } = useQuery({
+    queryKey: ["districts", rangeStartDate, rangeEndDate], 
+    queryFn: () => fetchDistricts(rangeStartDate, rangeEndDate),
   });
+
 
   return (
     <>
@@ -101,7 +106,9 @@ export default function Home() {
           <CustomBarChart
             title="Most dangerous neighborhoods"
             data={districts}
-            config={config}
+            config={config} 
+            setRangeStartDate={setRangeStartDate} 
+            setRangeEndDate={setRangeEndDate}     
           />
           <CustomPieChart
             title="Répartition des types de crimes"
