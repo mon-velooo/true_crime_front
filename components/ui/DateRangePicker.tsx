@@ -16,22 +16,33 @@ import { DateRange } from "react-day-picker";
 
 interface DateRangePickerProps {
   onDateChange?: (date: DateRange) => void;
+  value?: DateRange;
 }
 
-export function DateRangePicker({
-  onDateChange,
-}) {
+export function DateRangePicker({ onDateChange, value }: DateRangePickerProps) {
   const start = new Date("03-05-2024");
   const today = new Date();
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: start,
-    to: today,
-  });
+  const [date, setDate] = React.useState<DateRange>(
+    value || {
+      from: start,
+      to: today,
+    }
+  );
 
-  const handleDateChange = (range: DateRange) => {
-    setDate(range);
-    onDateChange(range);
-  }
+  const handleDateChange = (range: DateRange | undefined) => {
+    if (!range || (!range.from && !range.to)) {
+      // Keep previous selection if trying to clear both dates
+      return;
+    }
+
+    const newRange = {
+      from: range.from || date.from,
+      to: range.to || range.from || date.from,
+    };
+
+    setDate(newRange);
+    onDateChange?.(newRange);
+  };
 
   return (
     <div className="grid gap-2">
@@ -46,17 +57,13 @@ export function DateRangePicker({
             )}
           >
             <CalendarIcon />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )
-            ) : (
-              <span>Pick a date</span>
+            {date.from && (
+              <>
+                {format(date.from, "LLL dd, y")}
+                {date.to && date.to !== date.from && (
+                  <> - {format(date.to, "LLL dd, y")}</>
+                )}
+              </>
             )}
           </Button>
         </PopoverTrigger>

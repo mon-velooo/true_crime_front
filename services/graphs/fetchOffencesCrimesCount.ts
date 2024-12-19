@@ -1,23 +1,21 @@
 import { config } from "@/lib/config";
 
-interface OffencesCrimesCount {
-  rangeDate: string[];
+interface OffencesCrimesCountParams {
+  rangeStartDate: string;
+  rangeEndDate: string;
 }
 
-export const fetchOffencesCrimesCount = async (params?: OffencesCrimesCount) => {
-  const rangeStartDate = params.rangeDate[0].split('T')[0];
-  const rangeEndDate = params.rangeDate[1].split('T')[0];
+export const fetchOffencesCrimesCount = async (
+  params: OffencesCrimesCountParams
+) => {
+  const queryString = `?${new URLSearchParams({
+    rangeStartDate: params.rangeStartDate,
+    rangeEndDate: params.rangeEndDate,
+  }).toString()}`;
 
-  const queryString = params
-    ? `?${new URLSearchParams({
-        rangeStartDate: rangeStartDate || '',
-        rangeEndDate: rangeEndDate || ''
-      }).toString()}`
-    : '';
-
-  const responseString = `${config.apiUrl}/graphs/offencesCrimesCount/${queryString}`;
-
-  const response = await fetch(responseString);
+  const response = await fetch(
+    `${config.apiUrl}/graphs/offencesCrimesCount/${queryString}`
+  );
   if (!response.ok) throw new Error("Failed to fetch offences crimes count");
   return response.json();
 };

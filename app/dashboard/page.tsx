@@ -27,62 +27,37 @@ export default function Home() {
     },
   } satisfies ChartConfig;
 
-  const start = new Date("03-05-2024");
-  const today = new Date();
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-    from: start,
-    to: today,
-  });
-
-  const handleDateChange = (range: DateRange) => {
-    setDateRange(range);
-  };
-
-  const [rangeStartDate, setRangeStartDate] = useState("2024-09-30");
-  const [rangeEndDate, setRangeEndDate] = useState("2024-09-30");
-
-  const { data: districts } = useQuery({
-    queryKey: ["districts", rangeStartDate, rangeEndDate],
-    queryFn: () => fetchDistricts(rangeStartDate, rangeEndDate),
-  });
-
   return (
-    <>
-      <Container>
-        <div className="flex justify-between items-center pb-4">
-          <h1 className="text-2xl font-semibold">Dashboard</h1>
-          <DateRangePicker onDateChange={handleDateChange} />
-        </div>
-        <Grid
-          cols={{
-            mobile: 3,
-            tablet: 2,
-            desktop: 2,
-          }}
-          gap={2}
-          className="pb-4"
-        >
-          <CustomVerticalBarChart
-            title="Crime distribution by twice hour"
-            description="Number of reported crimes throughout each pair hour during the period"
-            dateRange={dateRange}
-          />
+    <Container>
+      <div className="flex justify-between items-center pb-4">
+        <h1 className="text-2xl font-semibold">Dashboard</h1>
+      </div>
+      <Grid
+        cols={{
+          mobile: 3,
+          tablet: 2,
+          desktop: 2,
+        }}
+        gap={2}
+        className="pb-4"
+      >
+        <CustomVerticalBarChart
+          title="Crime distribution by twice hour"
+          description="Number of reported crimes throughout each pair hour during the period"
+        />
 
-          <OffencesCrimesCountPieChart
-            title="Breakdown of crime types"
-            description="Significant crimes number reported by type during the period"
-            dateRange={dateRange}
-          />
+        <OffencesCrimesCountPieChart
+          title="Breakdown of crime types"
+          description="Significant crimes number reported by type during the period"
+        />
 
-          <KpisList dateRange={dateRange} />
+        <KpisList />
 
-          <CustomRadialChart
-            title="Security rate"
-            description="Security rate per 100K residents"
-            dateRange={dateRange}
-          />
-        </Grid>
-      </Container>
-    </>
+        <CustomRadialChart
+          title="Security rate"
+          description="Security rate per 100K residents"
+        />
+      </Grid>
+    </Container>
   );
 }
