@@ -20,31 +20,31 @@ import { TrendingDown, TrendingUp } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { Label, Pie, PieChart } from "recharts";
 import { Skeleton } from "../ui/skeleton";
+import { useDateRange } from "@/providers/DateRangeProvider";
 
 interface CustomPieChartProps {
   title: string;
   description: string;
-  dateRange?: DateRange;
 }
 
 export function OffencesCrimesCountPieChart({
   title,
   description,
-  dateRange,
 }: CustomPieChartProps) {
+  const { dates } = useDateRange();
+
   const {
     data: offencesCrimesCount,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["offencesCrimesCount", dateRange],
+    queryKey: ["offencesCrimesCount", dates],
     queryFn: () =>
       fetchOffencesCrimesCount({
-        rangeDate: dateRange
-          ? [dateRange.from?.toISOString(), dateRange.to?.toISOString()]
-          : [],
+        rangeStartDate: dates.startDate,
+        rangeEndDate: dates.endDate,
       }),
-    enabled: !!dateRange,
+      enabled: !!dates.startDate && !!dates.endDate,
   });
 
   const data =

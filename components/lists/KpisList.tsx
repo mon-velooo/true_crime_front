@@ -3,25 +3,20 @@ import { CustomKPIChart } from "../charts/CustomKPIChart";
 import { Card } from "../ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { KpiSkeletonCard } from "../skeletons/KpiSkeletonCard";
-import { format } from "date-fns";
 import { KpiData } from "@/types/kpis";
-import { DateRange } from "react-day-picker";
+import { useDateRange } from "@/providers/DateRangeProvider";
 
-interface CustomKPIChartProps {
-  dateRange?: DateRange;
-}
-
-export const KpisList = ({ dateRange }: CustomKPIChartProps) => {
-  const startDate = format(dateRange.from, "MM-dd-yyyy");
-  const endDate = format(dateRange.to, "MM-dd-yyyy");
+export const KpisList = () => {
+  const { dates } = useDateRange();
 
   const { data: kpis, isLoading } = useQuery<KpiData[]>({
-    queryKey: ["kpis", dateRange],
+    queryKey: ["kpis", dates],
     queryFn: () =>
       fetchKpis({
-        rangeStartDate: dateRange ? startDate : "",
-        rangeEndDate: dateRange ? endDate : "",
+        rangeStartDate: dates.startDate,
+        rangeEndDate: dates.endDate,
       }),
+      enabled: !!dates.startDate && !!dates.endDate,
   });
 
   return (
