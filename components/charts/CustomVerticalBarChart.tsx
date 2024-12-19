@@ -1,7 +1,7 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard"; // Importer le squelette pour le graphique
 
 import {
   Card,
@@ -15,31 +15,40 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
-
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig;
 
 interface CustomVerticalBarChartProps {
   title: string;
   description?: string;
-  data: { month: string; desktop: number }[];
+  data: { hour: string; crimeCount: number }[];
   config: ChartConfig;
   footerText?: string;
+}
+
+function CustomTooltip({ payload, label }: any) {
+  if (payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div
+        style={{
+          backgroundColor: "#fff",
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          padding: "8px",
+          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
+          fontSize: "12px",
+          color: "#333",
+        }}
+      >
+        <p style={{ margin: "0", fontWeight: "bold" }}>{`Heure: ${label}:00`}</p>
+        <p style={{ margin: "0" }}>
+          {`Nombre de crimes: `}
+          <strong>{data.crimeCount}</strong>
+        </p>
+      </div>
+    );
+  }
+  return null;
 }
 
 export function CustomVerticalBarChart({
@@ -49,6 +58,22 @@ export function CustomVerticalBarChart({
   config,
   footerText,
 }: CustomVerticalBarChartProps) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simuler un délai de chargement de 3 secondes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false); // Après 3 secondes, les données sont considérées comme chargées
+    }, 3000);
+
+    return () => clearTimeout(timer); // Nettoyer le timer au démontage du composant
+  }, []);
+
+  if (isLoading) {
+    return <HoursGraphSkeletonCard />;
+  }
+
+  // Si les données sont chargées, afficher le graphique
   return (
     <Card>
       <CardHeader>
@@ -66,24 +91,17 @@ export function CustomVerticalBarChart({
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="hour"
               tickLine={false}
-              tickMargin={10}
+              tickMargin={0}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => `${value}:00`}
+              angle={-30}
+              textAnchor="end"
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
-              />
-            </Bar>
+            <YAxis />
+            <ChartTooltip cursor={false} content={<CustomTooltip />} />
+            <Bar dataKey="crimeCount" fill="var(--color-desktop)" radius={8} />
           </BarChart>
         </ChartContainer>
       </CardContent>

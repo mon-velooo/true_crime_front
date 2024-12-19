@@ -1,5 +1,7 @@
 "use client";
 
+import { CustomBarChart } from "@/components/charts/CustomBarChart";
+import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { OffencesCrimesCountPieChart } from "@/components/charts/OffencesCrimesCountPieChart";
 import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
 import { Container } from "@/components/layout/Container/Container";
@@ -9,6 +11,12 @@ import * as React from "react";
 import { DateRange } from "react-day-picker";
 import { KpisList } from "@/components/lists/KpisList";
 import formatDate from "@/components/utils/formatDate";
+import { fetchDistricts } from "@/services/districts/fetchDistricts";
+import { fetchHours } from "@/services/hours/fetchHours";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { CustomLineChart } from "@/components/charts/CustomLineChart";
+import { ChartConfig } from "@/components/ui/chart";
 
 export default function Home() {
   const start = new Date("03-05-2024");
@@ -21,6 +29,31 @@ export default function Home() {
   const handleDateChange = (range: DateRange) => {
     setDateRange(range);
   };
+
+  const [rangeStartDate, setRangeStartDate] = useState("2024-09-30");
+  const [rangeEndDate, setRangeEndDate] = useState("2024-09-30");
+
+  const { data: districts } = useQuery({
+    queryKey: ["districts", rangeStartDate, rangeEndDate],
+    queryFn: () => fetchDistricts(rangeStartDate, rangeEndDate),
+  });
+
+  const {
+    data: hours,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["hours", rangeStartDate, rangeEndDate],
+    queryFn: () => fetchHours(rangeStartDate, rangeEndDate),
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const formattedData = hours.stats.map((item) => ({
+    hour: item.hour,
+    crimeCount: item.crimeCount,
+  }));
 
   return (
     <>
@@ -38,6 +71,19 @@ export default function Home() {
           gap={2}
           className="pb-4"
         >
+          <CustomVerticalBarChart
+            title="Crime Distribution by Hour"
+            description="This chart shows the number of reported crimes throughout each hour of the day."
+            data={formattedData}
+            config={config}
+          />
+          <CustomBarChart
+            title="Most dangerous neighborhoods"
+            data={districts}
+            config={config}
+            setRangeStartDate={setRangeStartDate}
+            setRangeEndDate={setRangeEndDate}
+          />
           <OffencesCrimesCountPieChart
             title="Breakdown of crime types"
             description={`${formatDate(dateRange?.from)} - ${formatDate(dateRange?.to)}`}
