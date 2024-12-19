@@ -2,6 +2,7 @@
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
 import { CustomLineChart } from "@/components/charts/CustomLineChart";
 import { CustomPieChart } from "@/components/charts/CustomPieChart";
+import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
 import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { Container } from "@/components/layout/Container/Container";
 import Grid from "@/components/layout/Grid/Grid";
@@ -19,6 +20,8 @@ export default function Home() {
     { label: "edge", value: 173, fill: "hsl(var(--chart-4))" },
     { label: "other", value: 190, fill: "hsl(var(--chart-5))" },
   ];
+
+  const radialData = [{ month: "january", desktop: 1260, mobile: 570 }];
 
   const pieConfig = {
     chrome: { label: "Chrome", color: "hsl(var(--chart-1))" },
@@ -113,6 +116,12 @@ export default function Home() {
           />
 
           <KpisList rangeStartDate="2020-01-01" rangeEndDate="2021-01-30" />
+
+          <CustomRadialChart
+            title="Radial Chart - Stacked"
+            description="January - June 2024"
+            data={radialData}
+          />
         </Grid>
       </Container>
     </>
