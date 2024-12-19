@@ -120,8 +120,7 @@ export function CustomVerticalBarChart({
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
           Median {hoursCrimeData.average} and passed{" "}
-          {hoursCrimeData.averagePastTime} times{" "}
-          <TrendingUp className="h-4 w-4" />
+          {hoursCrimeData.averagePastTime} times
         </div>
         <div className="leading-none text-muted-foreground">
           Median is based on the number of crimes reported this period
