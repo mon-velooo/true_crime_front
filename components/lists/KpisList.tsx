@@ -1,27 +1,27 @@
-import { fetchKpis } from '@/services/kpis/fetchKpis';
-import { CustomKPIChart } from '../charts/CustomKPIChart';
-import { Card } from '../ui/card';
-import { useQuery } from '@tanstack/react-query';
-import { KpiSkeletonCard } from '../skeletons/KpiSkeletonCard';
-import { DateRange } from 'react-day-picker';
-import formatDate from '../utils/formatDate';
-import { format } from 'date-fns';
+import { fetchKpis } from "@/services/kpis/fetchKpis";
+import { CustomKPIChart } from "../charts/CustomKPIChart";
+import { Card } from "../ui/card";
+import { useQuery } from "@tanstack/react-query";
+import { KpiSkeletonCard } from "../skeletons/KpiSkeletonCard";
+import { format } from "date-fns";
+import { KpiData } from "@/types/kpis";
+import { DateRange } from "react-day-picker";
 
 interface CustomKPIChartProps {
   dateRange?: DateRange;
 }
 
 export const KpisList = ({ dateRange }: CustomKPIChartProps) => {
-  const startDate = format(dateRange.from, 'MM-dd-yyyy');
-  const endDate = format(dateRange.to, 'MM-dd-yyyy');
+  const startDate = format(dateRange.from, "MM-dd-yyyy");
+  const endDate = format(dateRange.to, "MM-dd-yyyy");
 
   const { data: kpis, isLoading } = useQuery<KpiData[]>({
-    queryKey: ['kpis', dateRange ? startDate : '', dateRange ? endDate : ''],
+    queryKey: ["kpis", dateRange ? startDate : "", dateRange ? endDate : ""],
     queryFn: () =>
       fetchKpis({
-        rangeStartDate: dateRange ? startDate : '',
-        rangeEndDate: dateRange ? endDate : ''
-      })
+        rangeStartDate: dateRange ? startDate : "",
+        rangeEndDate: dateRange ? endDate : "",
+      }),
   });
 
   return (
@@ -40,7 +40,11 @@ export const KpisList = ({ dateRange }: CustomKPIChartProps) => {
       ) : (
         <div className="grid grid-cols-2 gap-2">
           {kpis.map((kpi, index) => (
-            <CustomKPIChart key={index} title={kpi.title} description={kpi.description} />
+            <CustomKPIChart
+              key={index}
+              title={kpi.title}
+              description={kpi.description}
+            />
           ))}
         </div>
       )}
