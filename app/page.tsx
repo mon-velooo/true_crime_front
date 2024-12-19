@@ -9,6 +9,7 @@ import { KpisList } from "@/components/lists/KpisList";
 import { ChartConfig } from "@/components/ui/chart";
 import { DateRangePicker } from "@/components/ui/DateRangePicker";
 import { fetchDistricts } from "@/services/districts/fetchDistricts";
+import { fetchHours } from "@/services/hours/fetchHours";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
@@ -68,12 +69,23 @@ export default function Home() {
   const [rangeStartDate, setRangeStartDate] = useState('2024-09-30');
   const [rangeEndDate, setRangeEndDate] = useState('2024-09-30');
   
-  const { data: districts, isLoading, error } = useQuery({
+  const { data: districts} = useQuery({
     queryKey: ["districts", rangeStartDate, rangeEndDate], 
     queryFn: () => fetchDistricts(rangeStartDate, rangeEndDate),
   });
 
+  const { data: hours, isLoading, error } = useQuery({
+    queryKey: ["hours", rangeStartDate, rangeEndDate],
+    queryFn: () => fetchHours(rangeStartDate, rangeEndDate),
+  });
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const formattedData = hours.stats.map(item => ({
+    hour: item.hour,
+    crimeCount: item.crimeCount,
+  }));
   return (
     <>
       <Container>
@@ -98,9 +110,9 @@ export default function Home() {
             footerText="Showing total visitors for the last 6 months"
           />
           <CustomVerticalBarChart
-            title="test"
-            description="test"
-            data={chartData}
+            title="Crime Distribution by Hour"
+            description="This chart shows the number of reported crimes throughout each hour of the day."
+            data={formattedData}
             config={chartConfig}
           />
           <CustomBarChart

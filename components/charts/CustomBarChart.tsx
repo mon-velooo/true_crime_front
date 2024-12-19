@@ -6,11 +6,12 @@ import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useEffect, useState } from 'react';
+import { DistrictGraphSkeletonCard } from '../skeletons/DistrictGraphSkeletonCard'; // Import du squelette
 
 interface CustomBarChartProps {
   title: string;
   description?: string;
-  data: { districts: Array<{ id: number; name: string }> };
+  data: Array<{ district: { id: number, name: string }, crimeCount: number }>;
   config: ChartConfig;
   footerText?: string;
   setRangeStartDate: (date: string) => void;
@@ -18,6 +19,21 @@ interface CustomBarChartProps {
 }
 
 export function CustomBarChart({ title, description, data, config, footerText, setRangeStartDate, setRangeEndDate }: CustomBarChartProps) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simuler un délai de chargement de 3 secondes (ou tout autre délai souhaité)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // Ajuster la durée ici
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <DistrictGraphSkeletonCard />; // Affiche le squelette pendant le chargement
+  }
+
   if (!data) return null;
 
   const chartData = data.map((item) => ({ 
@@ -56,10 +72,6 @@ export function CustomBarChart({ title, description, data, config, footerText, s
     setRangeStartDate(startDate);
     setRangeEndDate(endDate);
   };
-
-  useEffect(() => {
-    console.log('chartData', chartData);
-  }, [chartData]);
 
   return (
     <Card>
