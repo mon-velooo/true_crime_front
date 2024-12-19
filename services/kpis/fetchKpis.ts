@@ -1,3 +1,4 @@
+import { formatNumber } from "@/components/utils/formatNumber";
 import { config } from "@/lib/config";
 import {
   KpiSecurityFeelingData,
@@ -11,7 +12,7 @@ const mapKpis = (apiKpiData: ApiKpiData[]): KpiData[] => {
   return apiKpiData.map((kpi) => ({
     title: kpi.title,
     description:
-      kpi.type === "percent" ? `${kpi.value}%` : kpi.value.toString(),
+      kpi.type === "percent" ? `${kpi.value}%` : formatNumber(kpi.value),
   }));
 };
 
