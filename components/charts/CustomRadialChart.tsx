@@ -20,6 +20,7 @@ import {
 import { fetchSecurityFeeling } from "@/services/kpis/fetchKpis";
 import { KpiSecurityFeelingData } from "@/types/kpis";
 import { useQuery } from "@tanstack/react-query";
+import { CustomRadialBarSkeletonCard } from "../skeletons/CustomRadialBarSkeletonCard";
 
 const REFERENCE_VALUE = 1.3;
 
@@ -68,7 +69,7 @@ export function CustomRadialChart({
   });
 
   if (isLoading) {
-    return <Card>Loading...</Card>;
+    return <CustomRadialBarSkeletonCard />;
   }
 
   return (
