@@ -64,13 +64,13 @@ export default function Home() {
         >
           <CustomVerticalBarChart
             title="Crime distribution by twice hour"
-            description="Number of reported crimes throughout each pair hour of the range date"
+            description="Number of reported crimes throughout each pair hour during the period"
             dateRange={dateRange}
           />
 
           <OffencesCrimesCountPieChart
             title="Breakdown of crime types"
-            description={`${formatDate(dateRange?.from)} - ${formatDate(dateRange?.to)}`}
+            description="Significant crimes number reported by type during the period"
             dateRange={dateRange}
           />
 
