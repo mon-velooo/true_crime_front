@@ -26,7 +26,6 @@ import { format } from "date-fns";
 
 const REFERENCE_VALUE = 1.3;
 
-// Dans le composant
 const calculateTrend = (crimeRate: string) => {
   const crimeRateNumber = parseFloat(crimeRate);
   const difference =
@@ -76,12 +75,12 @@ export function CustomRadialChart({
   }
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
+    <Card>
+      <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-1 items-center pb-0">
+      <CardContent>
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square w-full max-w-[250px]"
@@ -139,9 +138,9 @@ export function CustomRadialChart({
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
+      <CardFooter className="flex-col items-start gap-2 text-sm">
         {kpi && (
-          <div className="flex items-center gap-2 font-medium leading-none">
+          <div className="flex gap-2 font-medium leading-none">
             {(() => {
               const trend = calculateTrend(kpi[0].crimeRate);
               return (
@@ -159,7 +158,7 @@ export function CustomRadialChart({
           </div>
         )}
         <div className="leading-none text-muted-foreground">
-          Showing security rate for the actual range date selected
+          Criminal median rate is based on 20 crimes per 100K residents
         </div>
       </CardFooter>
     </Card>

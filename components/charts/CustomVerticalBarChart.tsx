@@ -1,7 +1,14 @@
-import { useState, useEffect } from "react";
+"use client";
+
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard"; // Importer le squelette pour le graphique
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  ReferenceLine,
+  XAxis,
+} from "recharts";
 
 import {
   Card,
@@ -15,76 +22,64 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { fetchHours } from "@/services/hours/fetchHours";
+import { CrimeByHourStatsData } from "@/types/graphs";
+import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard";
+
+const chartConfig = {
+  crimeCount: {
+    label: "Crimes",
+    color: "hsl(var(--chart-1))",
+  },
+  average: {
+    label: "Average",
+    color: "hsl(var(--chart-2))",
+  },
+} satisfies ChartConfig;
 
 interface CustomVerticalBarChartProps {
   title: string;
-  description?: string;
-  data: { hour: string; crimeCount: number }[];
-  config: ChartConfig;
-  footerText?: string;
-}
-
-function CustomTooltip({ payload, label }: any) {
-  if (payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div
-        style={{
-          backgroundColor: "#fff",
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-          padding: "8px",
-          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
-          fontSize: "12px",
-          color: "#333",
-        }}
-      >
-        <p style={{ margin: "0", fontWeight: "bold" }}>{`Heure: ${label}:00`}</p>
-        <p style={{ margin: "0" }}>
-          {`Nombre de crimes: `}
-          <strong>{data.crimeCount}</strong>
-        </p>
-      </div>
-    );
-  }
-  return null;
+  description: string;
+  dateRange?: DateRange;
 }
 
 export function CustomVerticalBarChart({
   title,
   description,
-  data,
-  config,
-  footerText,
+  dateRange,
 }: CustomVerticalBarChartProps) {
-  const [isLoading, setIsLoading] = useState(true);
+  const startDate = format(dateRange.from, "MM-dd-yyyy");
+  const endDate = format(dateRange.to, "MM-dd-yyyy");
 
-  // Simuler un délai de chargement de 3 secondes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); // Après 3 secondes, les données sont considérées comme chargées
-    }, 3000);
-
-    return () => clearTimeout(timer); // Nettoyer le timer au démontage du composant
-  }, []);
+  const { data: hoursCrimeData, isLoading } = useQuery<CrimeByHourStatsData>({
+    queryKey: ["hoursCrime", dateRange],
+    queryFn: () =>
+      fetchHours({
+        rangeStartDate: dateRange ? startDate : "",
+        rangeEndDate: dateRange ? endDate : "",
+      }),
+  });
 
   if (isLoading) {
     return <HoursGraphSkeletonCard />;
   }
 
-  // Si les données sont chargées, afficher le graphique
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={config}>
+        <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={data}
+            data={hoursCrimeData.stats}
             margin={{
               top: 20,
             }}
@@ -93,25 +88,43 @@ export function CustomVerticalBarChart({
             <XAxis
               dataKey="hour"
               tickLine={false}
-              tickMargin={0}
+              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => `${value}:00`}
-              angle={-30}
-              textAnchor="end"
+              tickFormatter={(value) => value.slice(0, 3)}
             />
-            <YAxis />
-            <ChartTooltip cursor={false} content={<CustomTooltip />} />
-            <Bar dataKey="crimeCount" fill="var(--color-desktop)" radius={8} />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar dataKey="crimeCount" fill="var(--color-crimeCount)" radius={8}>
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
+            <ReferenceLine
+              y={hoursCrimeData.average}
+              isFront={true}
+              stroke="hsl(var(--chart-3))"
+              strokeDasharray="7"
+              label={{
+                value: `A`,
+                position: "right",
+              }}
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Median {hoursCrimeData.average} and passed{" "}
+          {hoursCrimeData.averagePastTime} times
         </div>
-        {footerText && (
-          <div className="leading-none text-muted-foreground">{footerText}</div>
-        )}
+        <div className="leading-none text-muted-foreground">
+          Median is based on the number of crimes reported this period
+        </div>
       </CardFooter>
     </Card>
   );

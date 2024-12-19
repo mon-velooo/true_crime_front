@@ -1,7 +1,5 @@
 "use client";
 
-import { CustomBarChart } from "@/components/charts/CustomBarChart";
-import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { OffencesCrimesCountPieChart } from "@/components/charts/OffencesCrimesCountPieChart";
 import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
 import { Container } from "@/components/layout/Container/Container";
@@ -12,10 +10,10 @@ import { DateRange } from "react-day-picker";
 import { KpisList } from "@/components/lists/KpisList";
 import formatDate from "@/components/utils/formatDate";
 import { fetchDistricts } from "@/services/districts/fetchDistricts";
-import { fetchHours } from "@/services/hours/fetchHours";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChartConfig } from "@/components/ui/chart";
+import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 
 export default function Home() {
   const config = {
@@ -48,23 +46,6 @@ export default function Home() {
     queryFn: () => fetchDistricts(rangeStartDate, rangeEndDate),
   });
 
-  const {
-    data: hours,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["hours", rangeStartDate, rangeEndDate],
-    queryFn: () => fetchHours(rangeStartDate, rangeEndDate),
-  });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
-  const formattedData = hours.stats.map((item) => ({
-    hour: item.hour,
-    crimeCount: item.crimeCount,
-  }));
-
   return (
     <>
       <Container>
@@ -82,18 +63,11 @@ export default function Home() {
           className="pb-4"
         >
           <CustomVerticalBarChart
-            title="Crime Distribution by Hour"
-            description="This chart shows the number of reported crimes throughout each hour of the day."
-            data={formattedData}
-            config={config}
+            title="Crime distribution by twice hour"
+            description="Number of reported crimes throughout each pair hour of the range date"
+            dateRange={dateRange}
           />
-          <CustomBarChart
-            title="Most dangerous neighborhoods"
-            data={districts}
-            config={config}
-            setRangeStartDate={setRangeStartDate}
-            setRangeEndDate={setRangeEndDate}
-          />
+
           <OffencesCrimesCountPieChart
             title="Breakdown of crime types"
             description={`${formatDate(dateRange?.from)} - ${formatDate(dateRange?.to)}`}
@@ -104,7 +78,7 @@ export default function Home() {
 
           <CustomRadialChart
             title="Security rate"
-            description={`${formatDate(dateRange?.from)} - ${formatDate(dateRange?.to)}`}
+            description="Security rate per 100K residents"
             dateRange={dateRange}
           />
         </Grid>

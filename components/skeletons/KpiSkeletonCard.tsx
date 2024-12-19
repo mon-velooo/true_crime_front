@@ -6,11 +6,11 @@ export function KpiSkeletonCard() {
     <Card>
       <CardHeader>
         <CardTitle>
-          <Skeleton className="h-4 w-[150px]" />
+          <Skeleton className="h-6 w-[150px]" />
         </CardTitle>
         <CardDescription>
-          <div className="mt-10">
-            <Skeleton className="h-8 w-[100px]" />
+          <div>
+            <Skeleton className="h-10 w-[100px]" />
           </div>
         </CardDescription>
       </CardHeader>
