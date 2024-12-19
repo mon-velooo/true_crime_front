@@ -1,12 +1,11 @@
 "use client";
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
-import { CustomKPIChart } from "@/components/charts/CustomKPIChart";
 import { CustomLineChart } from "@/components/charts/CustomLineChart";
 import { CustomPieChart } from "@/components/charts/CustomPieChart";
 import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { Container } from "@/components/layout/Container/Container";
 import Grid from "@/components/layout/Grid/Grid";
-import { Card } from "@/components/ui/card";
+import { KpisList } from "@/components/lists/KpisList";
 import { ChartConfig } from "@/components/ui/chart";
 import { DateRangePicker } from "@/components/ui/DateRangePicker";
 import { fetchDistricts } from "@/services/districts/fetchDistricts";
@@ -93,20 +92,17 @@ export default function Home() {
             config={config}
             footerText="Showing total visitors for the last 6 months"
           />
-
           <CustomVerticalBarChart
             title="test"
             description="test"
             data={chartData}
             config={chartConfig}
           />
-
           <CustomBarChart
             title="Most dangerous neighborhoods"
             data={districts}
             config={config}
           />
-
           <CustomPieChart
             title="Répartition des types de crimes"
             description="January - June 2024"
@@ -116,25 +112,7 @@ export default function Home() {
             footerText="Showing total visitors for the last 6 months"
           />
 
-          <div className="grid grid-cols-3 sm:grid-cols-1 gap-2">
-            <Card>
-              <div className="flex align-middle justify-between p-4">
-                <h2 className="text-lg font-semibold">Daily KPIs</h2>
-              </div>
-            </Card>
-            <div className="grid grid-cols-2 gap-2">
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
-              <CustomKPIChart title="Nombre d'infractions" description="300K" />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <CustomKPIChart title="Nombre de victimes" description="300K" />
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <CustomKPIChart title="Nombre d'infractions" description="300K" />
-              <CustomKPIChart title="Nombre de criminels" description="300K" />
-            </div>
-          </div>
+          <KpisList rangeStartDate="2020-01-01" rangeEndDate="2021-01-30" />
         </Grid>
       </Container>
     </>
