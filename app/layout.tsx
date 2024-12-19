@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/ui/AppSidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 import QueryProvider from '@/providers/QueryProvider';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 import type { Metadata } from 'next';
 
 import './globals.css';
@@ -21,19 +22,21 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
   const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true';
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <QueryProvider>
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <AppSidebar />
-            <SidebarInset>
-              <Header />
-              <QueryProvider>
-                <main className="w-full p-4">{children}</main>
-              </QueryProvider>
-            </SidebarInset>
-          </SidebarProvider>
-        </QueryProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <QueryProvider>
+            <SidebarProvider defaultOpen={defaultOpen}>
+              <AppSidebar />
+              <SidebarInset>
+                <Header />
+                <QueryProvider>
+                  <main className="w-full h-full p-4">{children}</main>
+                </QueryProvider>
+              </SidebarInset>
+            </SidebarProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

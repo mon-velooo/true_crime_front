@@ -21,3 +21,9 @@ export const fetchCrimes = async (params?: CrimeParams) => {
   if (!response.ok) throw new Error('Failed to fetch crimes');
   return response.json();
 };
+
+export const fetchCrime = async (id: string) => {
+  const response = await fetch(`${config.apiUrl}/crimes/${id}`);
+  if (!response.ok) throw new Error('Failed to fetch crime');
+  return response.json();
+};
