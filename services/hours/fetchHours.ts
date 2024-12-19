@@ -11,6 +11,7 @@ const mapCrimesByHour = (
   return {
     stats: apiCrimeByHourData.stats,
     average: apiCrimeByHourData.average,
+    averagePastTime: apiCrimeByHourData.averagePastTime,
   };
 };
 

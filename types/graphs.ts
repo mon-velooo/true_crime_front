@@ -11,9 +11,11 @@ export interface CrimeByHourData {
 export interface CrimeByHourStatsData {
   stats: CrimeByHourData[];
   average: number;
+  averagePastTime: number;
 }
 
 export interface ApiCrimeByHourData {
   stats: CrimeByHourData[];
   average: number;
+  averagePastTime: number;
 }
