@@ -24,7 +24,7 @@ import { CustomRadialBarSkeletonCard } from "../skeletons/CustomRadialBarSkeleto
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 
-const REFERENCE_VALUE = 1.3;
+const REFERENCE_VALUE = 16;
 
 const calculateTrend = (crimeRate: string) => {
   const crimeRateNumber = parseFloat(crimeRate);
