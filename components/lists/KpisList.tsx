@@ -2,8 +2,8 @@ import { fetchKpis } from "@/services/kpis/fetchKpis";
 import { CustomKPIChart } from "../charts/CustomKPIChart";
 import { Card } from "../ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { KpiData } from "@/types/kpis";
 import { KpiSkeletonCard } from "../skeletons/KpiSkeletonCard";
+import { KpiData } from "@/types/kpis";
 
 const kpiData = [
   { title: "Nombre de criminels", description: "300K" },

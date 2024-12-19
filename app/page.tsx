@@ -118,9 +118,10 @@ export default function Home() {
           <KpisList rangeStartDate="2020-01-01" rangeEndDate="2021-01-30" />
 
           <CustomRadialChart
-            title="Radial Chart - Stacked"
+            title="Security rate"
             description="January - June 2024"
-            data={radialData}
+            rangeStartDate="2024-01-01"
+            rangeEndDate="2024-03-30"
           />
         </Grid>
       </Container>

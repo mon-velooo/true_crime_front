@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 
 import {
@@ -17,29 +17,59 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { fetchSecurityFeeling } from "@/services/kpis/fetchKpis";
+import { KpiSecurityFeelingData } from "@/types/kpis";
+import { useQuery } from "@tanstack/react-query";
+
+const REFERENCE_VALUE = 1.3;
+
+// Dans le composant
+const calculateTrend = (crimeRate: string) => {
+  const crimeRateNumber = parseFloat(crimeRate);
+  const difference =
+    ((crimeRateNumber - REFERENCE_VALUE) / REFERENCE_VALUE) * 100;
+  return {
+    value: Math.abs(difference).toFixed(1),
+    isUp: difference > 0,
+  };
+};
+
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  securityRate: {
+    label: "Security",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  insecurityRate: {
+    label: "Insecurity",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
 interface CustomVerticalBarChartProps {
   title: string;
-  description?: string;
-  data: { month: string; desktop: number; mobile: number }[];
+  description: string;
+  rangeStartDate: string;
+  rangeEndDate: string;
 }
 
 export function CustomRadialChart({
   title,
   description,
-  data,
+  rangeStartDate,
+  rangeEndDate,
 }: CustomVerticalBarChartProps) {
-  const totalVisitors = data[0].desktop + data[0].mobile;
+  const { data: kpi, isLoading } = useQuery<KpiSecurityFeelingData[]>({
+    queryKey: ["securityFeeling", rangeStartDate, rangeEndDate],
+    queryFn: () =>
+      fetchSecurityFeeling({
+        rangeStartDate,
+        rangeEndDate,
+      }),
+  });
+
+  if (isLoading) {
+    return <Card>Loading...</Card>;
+  }
 
   return (
     <Card className="flex flex-col">
@@ -53,7 +83,7 @@ export function CustomRadialChart({
           className="mx-auto aspect-square w-full max-w-[250px]"
         >
           <RadialBarChart
-            data={data}
+            data={kpi}
             endAngle={180}
             innerRadius={80}
             outerRadius={130}
@@ -73,14 +103,14 @@ export function CustomRadialChart({
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {kpi[0].crimeRate}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 4}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Cirminal Point
                         </tspan>
                       </text>
                     );
@@ -89,15 +119,15 @@ export function CustomRadialChart({
               />
             </PolarRadiusAxis>
             <RadialBar
-              dataKey="desktop"
+              dataKey="insecurityRate"
               stackId="a"
               cornerRadius={5}
-              fill="var(--color-desktop)"
+              fill="var(--color-securityRate)"
               className="stroke-transparent stroke-2"
             />
             <RadialBar
-              dataKey="mobile"
-              fill="var(--color-mobile)"
+              dataKey="securityRate"
+              fill="var(--color-insecurityRate)"
               stackId="a"
               cornerRadius={5}
               className="stroke-transparent stroke-2"
@@ -106,11 +136,26 @@ export function CustomRadialChart({
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
+        {kpi && (
+          <div className="flex items-center gap-2 font-medium leading-none">
+            {(() => {
+              const trend = calculateTrend(kpi[0].crimeRate);
+              return (
+                <>
+                  Trending {trend.isUp ? "up" : "down"} by {trend.value}% for
+                  100K residents
+                  {trend.isUp ? (
+                    <TrendingUp className="h-4 w-4 text-red-500" />
+                  ) : (
+                    <TrendingDown className="h-4 w-4 text-green-500" />
+                  )}
+                </>
+              );
+            })()}
+          </div>
+        )}
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing security rate for the actual range date selected
         </div>
       </CardFooter>
     </Card>
