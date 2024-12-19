@@ -16,6 +16,7 @@ import { fetchHours } from "@/services/hours/fetchHours";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CustomLineChart } from "@/components/charts/CustomLineChart";
+import { ChartConfig } from "@/components/ui/chart";
 
 export default function Home() {
   
@@ -80,18 +81,11 @@ export default function Home() {
           gap={2}
           className="pb-4"
         >
-          <CustomLineChart
-            title="Line Chart"
-            description="January - June 2024"
-            data={data}
-            config={config}
-            footerText="Showing total visitors for the last 6 months"
-          />
           <CustomVerticalBarChart
             title="Crime Distribution by Hour"
             description="This chart shows the number of reported crimes throughout each hour of the day."
             data={formattedData}
-            config={chartConfig}
+            config={config}
           />
           <CustomBarChart
             title="Most dangerous neighborhoods"
