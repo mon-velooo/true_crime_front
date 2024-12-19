@@ -28,60 +28,42 @@ export default function Home() {
     },
   } satisfies ChartConfig;
 
-  const start = new Date("03-05-2024");
-  const today = new Date();
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-    from: start,
-    to: today,
-  });
-
-  const handleDateChange = (range: DateRange) => {
-    setDateRange(range);
-  };
-
   return (
-    <>
-      <Container>
-        <div className="flex justify-between items-center pb-4">
-          <h1 className="text-2xl font-semibold">Dashboard</h1>
-          <DateRangePicker onDateChange={handleDateChange} />
-        </div>
-        <Grid
-          cols={{
-            mobile: 3,
-            tablet: 2,
-            desktop: 2,
-          }}
-          gap={2}
-          className="pb-4"
-        >
-          <CustomVerticalBarChart
-            title="Crime distribution by twice hour"
-            description="Number of reported crimes throughout each pair hour"
-            dateRange={dateRange}
-          />
+    <Container>
+      <div className="flex justify-between items-center pb-4">
+        <h1 className="text-2xl font-semibold">Dashboard</h1>
+      </div>
+      <Grid
+        cols={{
+          mobile: 3,
+          tablet: 2,
+          desktop: 2,
+        }}
+        gap={2}
+        className="pb-4"
+      >
+        <CustomVerticalBarChart
+          title="Crime distribution by twice hour"
+          description="Number of reported crimes throughout each pair hour"
+        />
 
-          <CustomBarChart
-            title="Top crimes by district"
-            description="Number of reported crimes throughout each district"
-            dateRange={dateRange}
-          />
+        <CustomBarChart
+          title="Top crimes by district"
+          description="Number of reported crimes throughout each district"
+        />
 
-          <OffencesCrimesCountPieChart
-            title="Breakdown of crime types"
-            description="Significant crimes number reported by type"
-            dateRange={dateRange}
-          />
+        <OffencesCrimesCountPieChart
+          title="Breakdown of crime types"
+          description="Significant crimes number reported by type"
+        />
 
-          <KpisList dateRange={dateRange} />
+        <KpisList />
 
-          <CustomRadialChart
-            title="Security rate"
-            description="Security rate per 100K residents"
-            dateRange={dateRange}
-          />
-        </Grid>
-      </Container>
-    </>
+        <CustomRadialChart
+          title="Security rate"
+          description="Security rate per 100K residents"
+        />
+      </Grid>
+    </Container>
   );
 }

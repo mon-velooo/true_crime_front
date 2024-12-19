@@ -25,6 +25,7 @@ import { fetchDistricts } from "@/services/districts/fetchDistricts";
 import { HoursGraphSkeletonCard } from "../skeletons/HoursGraphSkeletonCard";
 import { capitalizeFirstLetter, toTitleCase } from "../utils/formatString";
 import { formatNumber } from "../utils/formatNumber";
+import { useDateRange } from "@/providers/DateRangeProvider";
 
 const chartConfig = {
   crimeCount: {
@@ -55,24 +56,19 @@ const chartConfig = {
 interface CustomBarChartProps {
   title: string;
   description: string;
-  dateRange?: DateRange;
 }
 
-export function CustomBarChart({
-  title,
-  description,
-  dateRange,
-}: CustomBarChartProps) {
-  const startDate = format(dateRange.from, "MM-dd-yyyy");
-  const endDate = format(dateRange.to, "MM-dd-yyyy");
+export function CustomBarChart({ title, description }: CustomBarChartProps) {
+  const { dates } = useDateRange();
 
   const { data: chartData, isLoading } = useQuery<CrimeByDistrictData[]>({
-    queryKey: ["topDistrictsCrime", dateRange],
+    queryKey: ["topDistrictsCrime", dates],
     queryFn: () =>
       fetchDistricts({
-        rangeStartDate: dateRange ? startDate : "",
-        rangeEndDate: dateRange ? endDate : "",
+        rangeStartDate: dates.startDate,
+        rangeEndDate: dates.endDate,
       }),
+    enabled: !!dates.startDate && !!dates.endDate,
   });
 
   if (isLoading) {
