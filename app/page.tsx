@@ -1,110 +1,114 @@
-'use client';
+"use client";
 
-import { useCallback } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useToast } from '@/hooks/use-toast';
-import AuthForm from '@/components/form/authForm/AuthForm';
-import { useMutation } from '@tanstack/react-query';
-import { signIn } from '@/services/auth/signin';
-import { useAuth } from '@/providers/AuthProvider';
-import { useRouter } from 'next/navigation';
+import { CustomBarChart } from "@/components/charts/CustomBarChart";
+import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
+import { OffencesCrimesCountPieChart } from "@/components/charts/OffencesCrimesCountPieChart";
+import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
+import { Container } from "@/components/layout/Container/Container";
+import Grid from "@/components/layout/Grid/Grid";
+import { DateRangePicker } from "@/components/ui/DateRangePicker";
+import * as React from "react";
+import { DateRange } from "react-day-picker";
+import { KpisList } from "@/components/lists/KpisList";
+import formatDate from "@/components/utils/formatDate";
+import { fetchDistricts } from "@/services/districts/fetchDistricts";
+import { fetchHours } from "@/services/hours/fetchHours";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { ChartConfig } from "@/components/ui/chart";
 
-type FormErrors = Record<string, { message?: string }>;
+export default function Home() {
+  const config = {
+    desktop: {
+      label: "Desktop",
+      color: "hsl(var(--chart-1))",
+    },
+    mobile: {
+      label: "Mobile",
+      color: "hsl(var(--chart-2))",
+    },
+  } satisfies ChartConfig;
 
-type FormValues = {
-  email: string;
-  password: string;
-};
-
-const formSchema = z.object({
-  email: z.string().email({
-    message: 'Email must be a valid email address.'
-  }),
-  password: z.string().min(8, {
-    message: 'Password must be at least 8 characters.'
-  })
-});
-
-export default function SignIn() {
-  const { toast } = useToast();
-  const { signIn: authSignIn } = useAuth();
-  const router = useRouter();
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: ''
-    }
+  const start = new Date("03-05-2024");
+  const today = new Date();
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: start,
+    to: today,
   });
 
-  const mutation = useMutation({
-    mutationFn: signIn,
-    onSuccess: async (data) => {
-      await authSignIn(data.username, data.email, data.role, data.token, data.id);
-      toast({
-        title: 'Access Granted',
-        description: 'Welcome to NYPD Crime Analysis Platform.'
-      });
-      router.push('/app');
-    },
-    onError: (error) => {
-      toast({
-        variant: 'destructive',
-        title: 'Authentication Failed',
-        description: `WuuiWuiiWuiii: ${error instanceof Error ? error.message : error}`
-      });
-    }
-  });
-
-  const onError = useCallback(
-    (errors: FormErrors) => {
-      Object.values(errors).forEach((error) => {
-        toast({
-          variant: 'destructive',
-          title: 'Form submission failed',
-          description: error.message
-        });
-      });
-    },
-    [toast]
-  );
-
-  const onSubmit = (values: FormValues) => {
-    mutation.mutate(values);
+  const handleDateChange = (range: DateRange) => {
+    setDateRange(range);
   };
 
+  const [rangeStartDate, setRangeStartDate] = useState("2024-09-30");
+  const [rangeEndDate, setRangeEndDate] = useState("2024-09-30");
+
+  const { data: districts } = useQuery({
+    queryKey: ["districts", rangeStartDate, rangeEndDate],
+    queryFn: () => fetchDistricts(rangeStartDate, rangeEndDate),
+  });
+
+  const {
+    data: hours,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["hours", rangeStartDate, rangeEndDate],
+    queryFn: () => fetchHours(rangeStartDate, rangeEndDate),
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const formattedData = hours.stats.map((item) => ({
+    hour: item.hour,
+    crimeCount: item.crimeCount,
+  }));
+
   return (
-    <AuthForm<FormValues>
-      title="NYPD Crime Analysis Platform"
-      description="Access NYC's comprehensive crime data dashboard."
-      fields={[
-        {
-          label: 'Email',
-          type: 'email',
-          id: 'email',
-          placeholder: 'johndoe@gmail.com',
-          name: 'email'
-        },
-        {
-          label: 'Password',
-          type: 'password',
-          id: 'password',
-          placeholder: '',
-          name: 'password'
-        }
-      ]}
-      form={form}
-      onSubmit={onSubmit}
-      onError={onError}
-      isLoading={mutation.status === 'pending'}
-      image={'/background.webp'}
-      buttonText="Sign In"
-      redirectText="Don't have an account? "
-      redirectButton="Sign up"
-      redirectLink="/signup"
-    />
+    <>
+      <Container>
+        <div className="flex justify-between items-center pb-4">
+          <h1 className="text-2xl font-semibold">Dashboard</h1>
+          <DateRangePicker onDateChange={handleDateChange} />
+        </div>
+        <Grid
+          cols={{
+            mobile: 3,
+            tablet: 2,
+            desktop: 2,
+          }}
+          gap={2}
+          className="pb-4"
+        >
+          <CustomVerticalBarChart
+            title="Crime Distribution by Hour"
+            description="This chart shows the number of reported crimes throughout each hour of the day."
+            data={formattedData}
+            config={config}
+          />
+          <CustomBarChart
+            title="Most dangerous neighborhoods"
+            data={districts}
+            config={config}
+            setRangeStartDate={setRangeStartDate}
+            setRangeEndDate={setRangeEndDate}
+          />
+          <OffencesCrimesCountPieChart
+            title="Breakdown of crime types"
+            description={`${formatDate(dateRange?.from)} - ${formatDate(dateRange?.to)}`}
+            dateRange={dateRange}
+          />
+
+          <KpisList dateRange={dateRange} />
+
+          <CustomRadialChart
+            title="Security rate"
+            description={`${formatDate(dateRange?.from)} - ${formatDate(dateRange?.to)}`}
+            dateRange={dateRange}
+          />
+        </Grid>
+      </Container>
+    </>
   );
 }

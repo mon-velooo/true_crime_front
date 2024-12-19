@@ -11,14 +11,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter,
-  SidebarHeader
+  SidebarFooter
 } from '@/components/ui/sidebar';
-import { Home, Map, LayoutDashboard, Building2 } from 'lucide-react';
+import { Home, Map, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '../theme/ThemeToggle';
-import { AppName } from './AppName';
-import SignOut from '../auth/SignOut';
 
 export const items = [
   {
@@ -40,13 +37,9 @@ export const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const basePath = pathname?.split('/')[1];
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <AppName name="New York City" logo={Building2} plan="Crime data" />
-      </SidebarHeader>
+    <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>True crime</SidebarGroupLabel>
@@ -57,7 +50,7 @@ export function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild className={cn('w-full', isActive && 'bg-accent text-accent-foreground')}>
-                      <Link href={`/${basePath}${item.url}`} className="flex items-center gap-2">
+                      <Link href={item.url} className="flex items-center gap-2">
                         <item.icon className={cn('h-4 w-4', isActive && 'text-accent-foreground')} />
                         <span className={cn(isActive && 'font-semibold')}>{item.title}</span>
                       </Link>
@@ -69,9 +62,8 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="flex flex-row justify-between">
-        <SignOut className="w-full group-data-[collapsible=icon]:hidden" />
-        <ThemeToggle className="w-3/12 group-data-[collapsible=icon]:w-full" />
+      <SidebarFooter>
+        <ThemeToggle />
       </SidebarFooter>
     </Sidebar>
   );

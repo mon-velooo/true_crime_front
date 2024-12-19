@@ -7,8 +7,7 @@ interface CrimeParams {
   startDate?: string;
 }
 
-export const fetchCrimes = async (params?: CrimeParams, token?: string) => {
-  console.log('token', token);
+export const fetchCrimes = async (params?: CrimeParams) => {
   const queryString = params
     ? `?${new URLSearchParams({
         longitude: params.longitude?.toString() || '',
@@ -18,25 +17,13 @@ export const fetchCrimes = async (params?: CrimeParams, token?: string) => {
       }).toString()}`
     : '';
 
-  const response = await fetch(`${config.apiUrl}/crimes${queryString}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : ''
-    }
-  });
-
+  const response = await fetch(`${config.apiUrl}/crimes${queryString}`);
   if (!response.ok) throw new Error('Failed to fetch crimes');
   return response.json();
 };
 
-export const fetchCrime = async (id: string, token?: string) => {
-  const response = await fetch(`${config.apiUrl}/crimes/${id}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : ''
-    }
-  });
-
+export const fetchCrime = async (id: string) => {
+  const response = await fetch(`${config.apiUrl}/crimes/${id}`);
   if (!response.ok) throw new Error('Failed to fetch crime');
   return response.json();
 };

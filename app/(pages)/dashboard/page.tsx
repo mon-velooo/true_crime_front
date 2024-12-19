@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function DashboardPage() {
   return (
-    <div className="flex space-x-4 p-4 h-[calc(100vh-67px)]">
+    <div className="flex space-x-4 p-4 h-[calc(100vh-100px)]">
       <Card className="w-1/2" x-chunk="Map vizualisations in real time of NYC crime data">
         <CardHeader>
           <CardTitle>Real time map vizalisations</CardTitle>
