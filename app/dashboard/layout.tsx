@@ -21,7 +21,7 @@ async function UserLayout({ children }: { children: React.ReactNode }) {
         <AppSidebar />
         <SidebarInset>
           <Header />
-          <section className="w-full h-full">{children}</section>
+          <section className="w-full h-full pt-16">{children}</section>
         </SidebarInset>
       </DateRangeProvider>
     </SidebarProvider>
