@@ -17,16 +17,6 @@ import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarCha
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
 
 export default function Home() {
-  const config = {
-    desktop: {
-      label: "Desktop",
-      color: "hsl(var(--chart-1))",
-    },
-    mobile: {
-      label: "Mobile",
-      color: "hsl(var(--chart-2))",
-    },
-  } satisfies ChartConfig;
 
   return (
     <Container className="p-4">
@@ -36,7 +26,7 @@ export default function Home() {
           tablet: 2,
           desktop: 2,
         }}
-        gap={2}
+        gap={4}
       >
         <CustomVerticalBarChart
           title="Crime distribution by twice hour"
