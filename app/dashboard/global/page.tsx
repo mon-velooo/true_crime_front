@@ -1,24 +1,38 @@
-import MapContainer from '@/components/map/mapContainer/MapContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import React from 'react';
+"use client";
+
+import MapContainer from "@/components/map/mapContainer/MapContainer";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Container } from "@/components/layout/Container/Container";
+import Grid from "@/components/layout/Grid/Grid";
+import React from "react";
 
 export default function DashboardPage() {
   return (
-    <div className="flex space-x-4 p-4 h-[calc(100vh-67px)]">
-      <Card className="w-1/2" x-chunk="Map vizualisations in real time of NYC crime data">
-        <CardHeader>
-          <CardTitle>Real time map vizalisations</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-8">Content</CardContent>
-      </Card>
-      <Card className="w-1/2 max-h-full" x-chunk="Map vizualisations in real time of NYC crime data">
-        <CardHeader>
-          <CardTitle>Real time map vizalisations</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-8">
-          <MapContainer className="w-full h-64 rounded-md" />
-        </CardContent>
-      </Card>
-    </div>
+    <Container className="p-4">
+      <Grid
+        cols={{
+          mobile: 1,
+          tablet: 2,
+          desktop: 2,
+        }}
+        gap={4}
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle>Crime Statistics</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-8">Content</CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Real-time Crime Map</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-8">
+            <MapContainer className="w-full h-64 rounded-md" />
+          </CardContent>
+        </Card>
+      </Grid>
+    </Container>
   );
 }
