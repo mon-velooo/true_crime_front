@@ -29,10 +29,7 @@ export default function Home() {
   } satisfies ChartConfig;
 
   return (
-    <Container>
-      <div className="flex justify-between items-center pb-4">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-      </div>
+    <Container className="p-4">
       <Grid
         cols={{
           mobile: 3,
@@ -40,7 +37,6 @@ export default function Home() {
           desktop: 2,
         }}
         gap={2}
-        className="pb-4"
       >
         <CustomVerticalBarChart
           title="Crime distribution by twice hour"
