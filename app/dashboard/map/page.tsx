@@ -7,6 +7,8 @@ import Grid from "@/components/layout/Grid/Grid";
 import React, { useEffect, useState } from "react";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import { useDateRange } from "@/providers/DateRangeProvider";
+import { ReportingsList } from "@/components/lists/ReportingsList";
+import RadarPulse from "@/components/ui/RadarPulse";
 
 export default function DashboardPage() {
   const { dates } = useDateRange();
@@ -40,9 +42,13 @@ export default function DashboardPage() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Crime Statistics</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <RadarPulse /> Reportings
+            </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-8">Content</CardContent>
+          <CardContent className="grid gap-8">
+            <ReportingsList />
+          </CardContent>
         </Card>
 
         <Card>
