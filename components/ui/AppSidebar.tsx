@@ -22,20 +22,15 @@ import SignOut from '../auth/SignOut';
 
 export const items = [
   {
-    title: 'Home',
-    url: '/',
-    icon: Home
-  },
-  {
     title: 'Dashboard',
-    url: '/global',
+    url: '/',
     icon: LayoutDashboard
   },
   {
-    title: 'Interactive map',
+    title: 'Map',
     url: '/map',
     icon: Map
-  }
+  },
 ];
 
 export function AppSidebar() {
