@@ -64,7 +64,7 @@ export function CustomRadialChart({
         rangeStartDate: dates.startDate,
         rangeEndDate: dates.endDate,
       }),
-      enabled: !!dates.startDate && !!dates.endDate,
+    enabled: !!dates.startDate && !!dates.endDate,
   });
 
   if (isLoading) {

@@ -8,13 +8,14 @@ import * as React from "react";
 import { KpisList } from "@/components/lists/KpisList";
 import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
+import { CustomRadarChart } from "@/components/charts/CustomRadarChart";
 
 export default function Home() {
   return (
     <Container className="p-4">
       <Grid
         cols={{
-          mobile: 3,
+          mobile: 1,
           tablet: 2,
           desktop: 2,
         }}
@@ -40,6 +41,11 @@ export default function Home() {
         <CustomRadialChart
           title="Security rate"
           description="Security rate per 100K residents"
+        />
+
+        <CustomRadarChart
+          title="Age distribution"
+          description="Age distribution between victims and suspects"
         />
       </Grid>
     </Container>
