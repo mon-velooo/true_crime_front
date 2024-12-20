@@ -4,20 +4,12 @@ import { OffencesCrimesCountPieChart } from "@/components/charts/OffencesCrimesC
 import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
 import { Container } from "@/components/layout/Container/Container";
 import Grid from "@/components/layout/Grid/Grid";
-import { DateRangePicker } from "@/components/ui/DateRangePicker";
 import * as React from "react";
-import { DateRange } from "react-day-picker";
 import { KpisList } from "@/components/lists/KpisList";
-import formatDate from "@/components/utils/formatDate";
-import { fetchDistricts } from "@/services/districts/fetchDistricts";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { ChartConfig } from "@/components/ui/chart";
 import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
 
 export default function Home() {
-
   return (
     <Container className="p-4">
       <Grid

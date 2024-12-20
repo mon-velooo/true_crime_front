@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
 import {
@@ -17,8 +16,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { CrimeByDistrictData } from "@/types/graphs";
 import { fetchDistricts } from "@/services/districts/fetchDistricts";

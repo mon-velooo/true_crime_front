@@ -21,8 +21,6 @@ import { fetchSecurityFeeling } from "@/services/kpis/fetchKpis";
 import { KpiSecurityFeelingData } from "@/types/kpis";
 import { useQuery } from "@tanstack/react-query";
 import { CustomRadialBarSkeletonCard } from "../skeletons/CustomRadialBarSkeletonCard";
-import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
 import { useDateRange } from "@/providers/DateRangeProvider";
 
 const REFERENCE_VALUE = 16;
