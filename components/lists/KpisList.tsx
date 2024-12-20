@@ -20,20 +20,20 @@ export const KpisList = () => {
   });
 
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-1 gap-2">
+    <div className="grid grid-cols-3 sm:grid-cols-1 gap-4">
       <Card>
         <div className="flex align-middle justify-between p-4">
           <h2 className="text-lg font-semibold">Periods KPIs</h2>
         </div>
       </Card>
       {isLoading ? (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-4">
           {Array.from({ length: 6 }).map((_, index) => (
             <KpiSkeletonCard key={`skeleton-${index}`} />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-4">
           {kpis.map((kpi, index) => (
             <CustomKPIChart
               key={index}
