@@ -35,14 +35,14 @@ const EventDetailContent = ({ crime, crimeIsLoading }) => {
           <CardContent className="p-6 space-y-6">
             <div className="flex items-start justify-between">
               <div className="space-y-1.5">
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-lg max-w-[250px]">
                   {crime?.description || "N/A"}
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   {crime?.offence?.description || "No description available"}
                 </p>
               </div>
-              <div className="space-y-2">
+              <div className="sticky top-O right-3">
                 <Badge
                   variant="secondary"
                   className={getLawCategoryColor(

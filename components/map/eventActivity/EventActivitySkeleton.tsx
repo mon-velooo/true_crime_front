@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export default function EventActivitySkeleton() {
   return (
     <div className="w-full">
-      <ScrollArea className="h-[calc(100vh-510px)]">
+      <ScrollArea className="h-[calc(100vh-520px)]">
         <div className="space-y-4">
           {[1, 2, 3].map((index) => (
             <div

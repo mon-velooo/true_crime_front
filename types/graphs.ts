@@ -50,3 +50,27 @@ export interface AgeGroupCrimesStatsData {
   stats: AgeGroupCrimesData[];
   extremValue: AgeGroupCrimesData;
 }
+export interface ApiCrimeByDayData {
+  date: string;
+  crimeCount: number;
+}
+
+export interface CrimeByDayData {
+  date: string;
+  crimes: number;
+  average: number;
+}
+
+export interface CrimeByDayStatsData {
+  stats: CrimeByDayData[];
+  total: number;
+  average: number;
+  numberOfDays: number;
+}
+
+export interface ApiCrimeByDayStatsData {
+  stats: ApiCrimeByDayData[];
+  total: number;
+  average: number;
+  numberOfDays: number;
+}

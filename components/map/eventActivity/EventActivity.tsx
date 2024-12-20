@@ -66,7 +66,7 @@ const EventActivityContent = ({
 
   return (
     <div className="relative">
-      <ScrollArea className="h-[calc(100vh-510px)]">
+      <ScrollArea className="h-[calc(100vh-520px)]">
         <div className="space-y-4">
           {crimes?.crimes.map((crime) => (
             <div
