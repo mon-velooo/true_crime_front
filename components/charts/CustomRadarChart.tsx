@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/chart";
 import { useQuery } from "@tanstack/react-query";
 import { useDateRange } from "@/providers/DateRangeProvider";
-import { AgeGroupCrimesData, AgeGroupCrimesStatsData } from "@/types/graphs";
+import { AgeGroupCrimesStatsData } from "@/types/graphs";
 import { fetchAgeGroup } from "@/services/graphs/fetchAgeGroup";
 import { CustomRadialBarSkeletonCard } from "../skeletons/CustomRadialBarSkeletonCard";
 import { formatNumber } from "../utils/formatNumber";
