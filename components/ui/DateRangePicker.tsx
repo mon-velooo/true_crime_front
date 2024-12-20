@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -10,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { addDays, format } from "date-fns";
+import { format, subDays, subMonths } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
@@ -20,18 +19,19 @@ interface DateRangePickerProps {
 }
 
 export function DateRangePicker({ onDateChange, value }: DateRangePickerProps) {
-  const start = new Date("03-05-2024");
-  const today = new Date();
+  const realToday = new Date();
+  const start = new Date("03-12-2024");
+  const threeMonthsAgo = subMonths(realToday, 3);
+
   const [date, setDate] = React.useState<DateRange>(
     value || {
       from: start,
-      to: today,
+      to: start,
     }
   );
 
   const handleDateChange = (range: DateRange | undefined) => {
     if (!range || (!range.from && !range.to)) {
-      // Keep previous selection if trying to clear both dates
       return;
     }
 
@@ -39,6 +39,10 @@ export function DateRangePicker({ onDateChange, value }: DateRangePickerProps) {
       from: range.from || date.from,
       to: range.to || range.from || date.from,
     };
+
+    // Ensure dates are within bounds
+    if (newRange.from < start) newRange.from = start;
+    if (newRange.to > threeMonthsAgo) newRange.to = threeMonthsAgo;
 
     setDate(newRange);
     onDateChange?.(newRange);
@@ -57,7 +61,7 @@ export function DateRangePicker({ onDateChange, value }: DateRangePickerProps) {
             )}
           >
             <CalendarIcon />
-            {date.from && (
+            {date?.from && (
               <>
                 {format(date.from, "LLL dd, y")}
                 {date.to && date.to !== date.from && (
@@ -73,6 +77,10 @@ export function DateRangePicker({ onDateChange, value }: DateRangePickerProps) {
             selected={date}
             onSelect={handleDateChange}
             numberOfMonths={2}
+            defaultMonth={threeMonthsAgo}
+            fromDate={start}
+            toDate={threeMonthsAgo}
+            disabled={(date) => date < start || date > threeMonthsAgo}
           />
         </PopoverContent>
       </Popover>

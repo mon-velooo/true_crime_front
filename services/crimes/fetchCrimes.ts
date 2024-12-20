@@ -4,7 +4,8 @@ interface CrimeParams {
   longitude?: number;
   lattitude?: number;
   zoom?: number;
-  startDate?: string;
+  rangeStartDate: string;
+  rangeEndDate: string;
 }
 
 export const fetchCrimes = async (params?: CrimeParams, token?: string) => {
@@ -13,7 +14,8 @@ export const fetchCrimes = async (params?: CrimeParams, token?: string) => {
         longitude: params.longitude?.toString() || '',
         lattitude: params.lattitude?.toString() || '',
         zoomLevel: params.zoom?.toString() || '',
-        startDate: params.startDate || ''
+        rangeStartDate: params.rangeStartDate,
+        rangeEndDate: params.rangeEndDate,
       }).toString()}`
     : '';
 

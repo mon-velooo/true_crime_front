@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useMemo } from "react";
 import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
+import { format, subMonths } from "date-fns";
 
 interface DateRangeContextType {
   dateRange: DateRange | undefined;
@@ -19,9 +19,11 @@ const DateRangeContext = createContext<DateRangeContextType | undefined>(
 export function DateRangeProvider({ children }: { children: React.ReactNode }) {
   const start = new Date("03-05-2024");
   const today = new Date();
+  const threeMonthsAgo = subMonths(today, 3);
+
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: start,
-    to: today,
+    to: threeMonthsAgo,
   });
 
   const dates = useMemo(() => {
