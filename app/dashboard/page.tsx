@@ -15,19 +15,9 @@ import { useState } from "react";
 import { ChartConfig } from "@/components/ui/chart";
 import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
+import { CustomRadarChart } from "@/components/charts/CustomRadarChart";
 
 export default function Home() {
-  const config = {
-    desktop: {
-      label: "Desktop",
-      color: "hsl(var(--chart-1))",
-    },
-    mobile: {
-      label: "Mobile",
-      color: "hsl(var(--chart-2))",
-    },
-  } satisfies ChartConfig;
-
   return (
     <Container>
       <div className="flex justify-between items-center pb-4">
@@ -35,7 +25,7 @@ export default function Home() {
       </div>
       <Grid
         cols={{
-          mobile: 3,
+          mobile: 1,
           tablet: 2,
           desktop: 2,
         }}
@@ -62,6 +52,11 @@ export default function Home() {
         <CustomRadialChart
           title="Security rate"
           description="Security rate per 100K residents"
+        />
+
+        <CustomRadarChart
+          title="Age distribution"
+          description="Age distribution between victims and suspects"
         />
       </Grid>
     </Container>

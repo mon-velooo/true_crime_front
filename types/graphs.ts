@@ -33,3 +33,20 @@ export interface CrimeByDistrictData {
   crimeCount: number;
   fill: string;
 }
+
+export interface ApiAgeGroupCrimesData {
+  ageGroup: string;
+  victimsCount: number;
+  suspectsCount: number;
+}
+
+export interface AgeGroupCrimesData {
+  ageRange: string;
+  victims: number;
+  suspects: number;
+}
+
+export interface AgeGroupCrimesStatsData {
+  stats: AgeGroupCrimesData[];
+  extremValue: AgeGroupCrimesData;
+}
