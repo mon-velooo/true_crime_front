@@ -8,6 +8,7 @@ import { config } from "@/lib/config";
 import type { Viewport, Crime, CrimesResponse } from "@/types/crimes";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import MapViewSkeleton from "./MapViewSkeleton";
 
 interface MapViewProps {
   className: string;
@@ -58,6 +59,8 @@ export default function MapView({
     }
   }, [selectedCrime]);
 
+  if (React.Children.count(pins) === 0) return <MapViewSkeleton />;
+
   return (
     <div className={className}>
       <Map
@@ -70,8 +73,8 @@ export default function MapView({
         onLoad={initializeGeocoder}
         style={{ borderRadius: "0.5rem" }}
       >
-        {/* <FullscreenControl position="top-left" />
-        <GeolocateControl position="top-left" fitBoundsOptions={{ maxZoom: 15 }} /> */}
+        <FullscreenControl position="top-left" />
+        {/* <GeolocateControl position="top-left" fitBoundsOptions={{ maxZoom: 15 }} /> */}
 
         {/* <MapMaker
           crimes={crimes}

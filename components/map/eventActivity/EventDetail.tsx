@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { fetchCrime } from '@/services/crimes/fetchCrimes';
-import { getLawCategoryColor } from './EventActivity';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { fetchCrime } from "@/services/crimes/fetchCrimes";
+import { getLawCategoryColor } from "./EventActivity";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import EventDetailSkeleton from "./EventDetailSkeleton";
 
 interface EventDetailProps {
   crimeId: string;
@@ -16,11 +17,15 @@ interface EventDetailProps {
 
 const EventDetailContent = ({ crime, crimeIsLoading }) => {
   if (crimeIsLoading) {
-    return <div className="w-full p-8 text-center text-muted-foreground">Loading...</div>;
+    return <EventDetailSkeleton />;
   }
 
   if (!crime) {
-    return <div className="w-full p-8 text-center text-muted-foreground">No crime found</div>;
+    return (
+      <div className="w-full p-8 text-center text-muted-foreground">
+        No crime found
+      </div>
+    );
   }
 
   return (
@@ -30,17 +35,24 @@ const EventDetailContent = ({ crime, crimeIsLoading }) => {
           <CardContent className="p-6 space-y-6">
             <div className="flex items-start justify-between">
               <div className="space-y-1.5">
-                <h3 className="font-semibold text-lg">{crime?.description || 'N/A'}</h3>
+                <h3 className="font-semibold text-lg">
+                  {crime?.description || "N/A"}
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  {crime?.offence?.description || 'No description available'}
+                  {crime?.offence?.description || "No description available"}
                 </p>
               </div>
               <div className="space-y-2">
-                <Badge variant="secondary" className={getLawCategoryColor(crime?.lawCategory?.label || '')}>
-                  {crime?.lawCategory?.label || 'Unknown'}
+                <Badge
+                  variant="secondary"
+                  className={getLawCategoryColor(
+                    crime?.lawCategory?.label || ""
+                  )}
+                >
+                  {crime?.lawCategory?.label || "Unknown"}
                 </Badge>
                 <Badge variant="outline" className="ml-2">
-                  {crime?.status?.label || 'Unknown'}
+                  {crime?.status?.label || "Unknown"}
                 </Badge>
               </div>
             </div>
@@ -51,14 +63,16 @@ const EventDetailContent = ({ crime, crimeIsLoading }) => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <p className="text-muted-foreground">District</p>
-                  <p className="font-medium">{crime?.district?.name || 'Unknown'}</p>
+                  <p className="font-medium">
+                    {crime?.district?.name || "Unknown"}
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-muted-foreground">Location Type</p>
                   <p className="font-medium">
                     {crime?.locationType?.label
-                      ? `${crime.locationType.label} (${crime?.locationDescription?.description || 'Unknown'})`
-                      : 'Unknown'}
+                      ? `${crime.locationType.label} (${crime?.locationDescription?.description || "Unknown"})`
+                      : "Unknown"}
                   </p>
                 </div>
               </div>
@@ -68,16 +82,20 @@ const EventDetailContent = ({ crime, crimeIsLoading }) => {
                   <p className="text-muted-foreground">Start Time</p>
                   <p className="font-medium">
                     {crime?.start_date && crime?.start_time
-                      ? new Date(`${crime.start_date}T${crime.start_time}`).toLocaleString()
-                      : 'Unknown'}
+                      ? new Date(
+                          `${crime.start_date}T${crime.start_time}`
+                        ).toLocaleString()
+                      : "Unknown"}
                   </p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-muted-foreground">End Time</p>
                   <p className="font-medium">
                     {crime?.end_date && crime?.end_time
-                      ? new Date(`${crime.end_date}T${crime.end_time}`).toLocaleString()
-                      : 'Unknown'}
+                      ? new Date(
+                          `${crime.end_date}T${crime.end_time}`
+                        ).toLocaleString()
+                      : "Unknown"}
                   </p>
                 </div>
               </div>
@@ -87,7 +105,7 @@ const EventDetailContent = ({ crime, crimeIsLoading }) => {
                 <p className="font-medium">
                   {crime?.latitude && crime?.longitude
                     ? `${crime.latitude.toFixed(6)}, ${crime.longitude.toFixed(6)}`
-                    : 'Unknown location'}
+                    : "Unknown location"}
                 </p>
               </div>
             </div>
@@ -101,15 +119,18 @@ const EventDetailContent = ({ crime, crimeIsLoading }) => {
 
 export default function EventDetail({ crimeId, onBack }: EventDetailProps) {
   const { data: crime, isLoading: crimeIsLoading } = useQuery({
-    queryKey: ['crime', crimeId],
-    queryFn: () => fetchCrime(crimeId)
+    queryKey: ["crime", crimeId],
+    queryFn: () => fetchCrime(crimeId),
   });
 
   return (
     <div className="w-full relative">
       <div className="relative mb-4">
         <h2 className="font-semibold">Event Details</h2>
-        <button onClick={onBack} className="text-sm text-muted-foreground hover:text-foreground absolute right-0 top-0">
+        <button
+          onClick={onBack}
+          className="text-sm text-muted-foreground hover:text-foreground absolute right-0 top-0"
+        >
           ← Back to list
         </button>
       </div>
