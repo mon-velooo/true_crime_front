@@ -4,25 +4,18 @@ import { OffencesCrimesCountPieChart } from "@/components/charts/OffencesCrimesC
 import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
 import { Container } from "@/components/layout/Container/Container";
 import Grid from "@/components/layout/Grid/Grid";
-import { DateRangePicker } from "@/components/ui/DateRangePicker";
 import * as React from "react";
-import { DateRange } from "react-day-picker";
 import { KpisList } from "@/components/lists/KpisList";
-import formatDate from "@/components/utils/formatDate";
-import { fetchDistricts } from "@/services/districts/fetchDistricts";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { ChartConfig } from "@/components/ui/chart";
 import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
+import { CustomRadarChart } from "@/components/charts/CustomRadarChart";
 
 export default function Home() {
-
   return (
     <Container className="p-4">
       <Grid
         cols={{
-          mobile: 3,
+          mobile: 1,
           tablet: 2,
           desktop: 2,
         }}
@@ -48,6 +41,11 @@ export default function Home() {
         <CustomRadialChart
           title="Security rate"
           description="Security rate per 100K residents"
+        />
+
+        <CustomRadarChart
+          title="Age distribution"
+          description="Age distribution between victims and suspects"
         />
       </Grid>
     </Container>

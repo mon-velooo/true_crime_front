@@ -12,14 +12,10 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { fetchOffencesCrimesCount } from "@/services/graphs/fetchOffencesCrimesCount";
 import { useQuery } from "@tanstack/react-query";
-import { TrendingDown, TrendingUp } from "lucide-react";
-import { DateRange } from "react-day-picker";
 import { Label, Pie, PieChart } from "recharts";
-import { Skeleton } from "../ui/skeleton";
 import { CustomRadialBarSkeletonCard } from "../skeletons/CustomRadialBarSkeletonCard";
 import { formatNumber } from "../utils/formatNumber";
 import { useDateRange } from "@/providers/DateRangeProvider";
