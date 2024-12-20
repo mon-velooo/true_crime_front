@@ -42,7 +42,6 @@ export function Header() {
         width: `calc(100% - ${state === "collapsed" ? "var(--sidebar-width-icon)" : "var(--sidebar-width)"})`,
       }}
     >
-      {" "}
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-2 h-4" />
       <Breadcrumb>

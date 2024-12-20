@@ -8,9 +8,26 @@ import type { Viewport, Crime } from "@/types/crimes";
 import { useAuth } from "@/providers/AuthProvider";
 import { Marker } from "react-map-gl";
 import Pin from "../mapView/Pin";
+import { useDateRange } from "@/providers/DateRangeProvider";
+import { format } from "date-fns";
+import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 
-export default function MapContainer({ className }: { className: string }) {
+export default function MapContainer({
+  selectedDate,
+  setSelectedDate,
+  dates,
+  className,
+}: {
+  selectedDate: Date;
+  setSelectedDate: (date: Date) => void;
+  dates: { startDate: string; endDate: string };
+  className: string;
+}) {
   const { user } = useAuth();
+  // const { dates } = useDateRange();
+  // const [selectedDate, setSelectedDate] = useState<Date>(
+  //   new Date(dates.endDate)
+  // );
 
   const [viewport, setViewport] = useState<Viewport>({
     longitude: -73.955242,
@@ -23,7 +40,6 @@ export default function MapContainer({ className }: { className: string }) {
 
   const [debouncedViewport, setDebouncedViewport] = useState(viewport);
   const previousPinsRef = useRef(null);
-
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -52,6 +68,7 @@ export default function MapContainer({ className }: { className: string }) {
       "crimes",
       debouncedViewport.longitude,
       debouncedViewport.latitude,
+      selectedDate.toISOString(),
     ],
     queryFn: () =>
       fetchCrimes(
@@ -59,14 +76,17 @@ export default function MapContainer({ className }: { className: string }) {
           longitude: debouncedViewport.longitude,
           lattitude: debouncedViewport.latitude,
           zoom: debouncedViewport.zoom,
-          startDate: "2024-03-08",
+          rangeStartDate: format(selectedDate, "yyyy-MM-dd"),
+          rangeEndDate: format(selectedDate, "yyyy-MM-dd"),
         },
         user?.token
       ),
-    enabled: !!user?.token,
-    initialData: { crimes: [] }
+    enabled:
+      !!user?.token &&
+      selectedDate >= new Date(dates.startDate) &&
+      selectedDate <= new Date(dates.endDate),
+    initialData: { crimes: [] },
   });
-
 
   const pins = useMemo(() => {
     const currentData = isFetching ? previousData : crimes;
