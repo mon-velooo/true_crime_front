@@ -74,23 +74,16 @@ export function CustomLineChart({ title, description }: CustomBarChartProps) {
 
   const getDistributedDates = (data: CrimeByDayData[]) => {
     if (!data || data.length < 2) return [];
-    if (data.length <= 10) return data.map((d) => d.date);
 
-    const result = [];
-    const step = Math.floor((data.length - 1) / 6);
+    // Calculate interval based on data length
+    const interval = Math.max(1, Math.floor(data.length / 7));
 
-    // Add first date
-    result.push(data[0].date);
-
-    // Add 5 intermediate dates
-    for (let i = 1; i <= 5; i++) {
-      result.push(data[i * step].date);
-    }
-
-    // Add last date
-    result.push(data[data.length - 1].date);
-
-    return result;
+    return data
+      .filter(
+        (_, index) =>
+          index === 0 || index === data.length - 1 || index % interval === 0
+      )
+      .map((d) => d.date);
   };
 
   if (isLoading) {
