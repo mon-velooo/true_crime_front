@@ -9,6 +9,7 @@ import { KpisList } from "@/components/lists/KpisList";
 import { CustomVerticalBarChart } from "@/components/charts/CustomVerticalBarChart";
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
 import { CustomRadarChart } from "@/components/charts/CustomRadarChart";
+import { CustomLineChart } from "@/components/charts/CustomLineChart";
 
 export default function Home() {
   return (
@@ -21,6 +22,13 @@ export default function Home() {
         }}
         gap={4}
       >
+        <div className="col-span-full">
+          <CustomLineChart
+            title="Daily Crime Trend"
+            description="Track the daily fluctuation of reported incidents"
+          />
+        </div>
+
         <CustomVerticalBarChart
           title="Crime distribution by twice hour"
           description="Number of reported crimes throughout each pair hour"

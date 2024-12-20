@@ -22,7 +22,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <QueryProvider>
-              <main>{children}</main>
+              <div>{children}</div>
               <Toaster />
             </QueryProvider>
           </ThemeProvider>
