@@ -29,7 +29,7 @@ export default function DashboardPage() {
     }
   }, [dates.startDate, selectedDate]);
   return (
-    <Container className="p-4 overflow-x-hidden">
+    <Container className="p-4">
       <Grid
         cols={{
           mobile: 1,

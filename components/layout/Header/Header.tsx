@@ -20,15 +20,12 @@ export function Header() {
   const basePath = pathname?.split("/")[1];
   const { state } = useSidebar();
 
-  const currentItem = items.find((item) => {
+  const currentItem = [...items.data, ...items.report].find((item) => {
     if (item.url === "/") {
       return pathname === `/${basePath}`;
     }
     return pathname === `/${basePath}${item.url}`;
-  }) || {
-    title: "Not Found",
-    url: pathname,
-  };
+  });
 
   return (
     <header

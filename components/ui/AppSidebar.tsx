@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -12,35 +12,46 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarFooter,
-  SidebarHeader
-} from '@/components/ui/sidebar';
-import { Home, Map, LayoutDashboard, Building2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { ThemeToggle } from '../theme/ThemeToggle';
-import { AppName } from './AppName';
-import SignOut from '../auth/SignOut';
+  SidebarHeader,
+} from "@/components/ui/sidebar";
+import { Home, Map, LayoutDashboard, Building2, Shield } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ThemeToggle } from "../theme/ThemeToggle";
+import { AppName } from "./AppName";
+import SignOut from "../auth/SignOut";
 
-export const items = [
-  {
-    title: 'Dashboard',
-    url: '/',
-    icon: LayoutDashboard
-  },
-  {
-    title: 'Map',
-    url: '/map',
-    icon: Map
-  },
-];
+export const items = {
+  data: [
+    {
+      title: "Dashboard",
+      url: "/",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Map",
+      url: "/map",
+      icon: Map,
+    },
+  ],
+  report: [
+    {
+      title: "Signal incident",
+      url: "/signal",
+      icon: Shield,
+    },
+  ],
+};
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const basePath = pathname?.split('/')[1];
+  const basePath = pathname?.split("/")[1];
 
   const isLinkActive = (itemUrl: string) => {
-    const currentPath = pathname?.endsWith('/') ? pathname.slice(0, -1) : pathname;
-    
-    if (itemUrl === '/' && currentPath === `/${basePath}`) {
+    const currentPath = pathname?.endsWith("/")
+      ? pathname.slice(0, -1)
+      : pathname;
+
+    if (itemUrl === "/" && currentPath === `/${basePath}`) {
       return true;
     }
 
@@ -55,18 +66,70 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>True crime</SidebarGroupLabel>
+          <SidebarGroupLabel>Data</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => {
+              {items.data.map((item) => {
                 const isActive = isLinkActive(item.url);
-
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild className={cn('w-full', isActive && 'bg-accent text-accent-foreground')}>
-                      <Link href={`/${basePath}${item.url}`} className="flex items-center gap-2">
-                        <item.icon className={cn('h-4 w-4', isActive && 'text-accent-foreground')} />
-                        <span className={cn(isActive && 'font-semibold')}>{item.title}</span>
+                    <SidebarMenuButton
+                      asChild
+                      className={cn(
+                        "w-full",
+                        isActive && "bg-accent text-accent-foreground"
+                      )}
+                    >
+                      <Link
+                        href={`/${basePath}${item.url}`}
+                        className="flex items-center gap-2"
+                      >
+                        <item.icon
+                          className={cn(
+                            "h-4 w-4",
+                            isActive && "text-accent-foreground"
+                          )}
+                        />
+                        <span className={cn(isActive && "font-semibold")}>
+                          {item.title}
+                        </span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Report</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.report.map((item) => {
+                const isActive = isLinkActive(item.url);
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      className={cn(
+                        "w-full",
+                        isActive && "bg-accent text-accent-foreground"
+                      )}
+                    >
+                      <Link
+                        href={`/${basePath}${item.url}`}
+                        className="flex items-center gap-2"
+                      >
+                        <item.icon
+                          className={cn(
+                            "h-4 w-4",
+                            isActive && "text-accent-foreground"
+                          )}
+                        />
+                        <span className={cn(isActive && "font-semibold")}>
+                          {item.title}
+                        </span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
